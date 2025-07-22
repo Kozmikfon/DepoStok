@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace DepoStok.Models
 {
@@ -7,19 +8,23 @@ namespace DepoStok.Models
         [Key]
         public int kullaniciId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [MaxLength(100)]
+        [DisplayName("İsim Soyisim:")]
         public string adSoyad { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [MaxLength(100)]
+        [DisplayName("Mail Adres:")]
         public string email { get; set; }=null!;
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [MaxLength(100)]
+        [DisplayName("Şifre:")]
         public string password { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
+        [DisplayName("Tarih:")]
         public DateTime olusturulmaTarihi { get; set; }
 
     }
