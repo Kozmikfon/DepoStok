@@ -1,0 +1,61 @@
+﻿@model DepoStok.Models.malzeme
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>malzeme</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.malzemeAdi)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.malzemeAdi)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.birim)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.birim)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.kategori)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.kategori)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.minStokMiktar)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.minStokMiktar)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.barkodNo)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.barkodNo)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.aktifPasif)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.aktifPasif)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.aciklama)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.aciklama)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.malzemeId">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

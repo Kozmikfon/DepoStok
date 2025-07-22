@@ -1,0 +1,50 @@
+﻿@model DepoStok.Models.depo
+
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<h1>Edit</h1>
+
+<h4>depo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="depoId" />
+            <div class="form-group">
+                <label asp-for="depoAd" class="control-label"></label>
+                <input asp-for="depoAd" class="form-control" />
+                <span asp-validation-for="depoAd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="rafBilgisi" class="control-label"></label>
+                <input asp-for="rafBilgisi" class="form-control" />
+                <span asp-validation-for="rafBilgisi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="aciklama" class="control-label"></label>
+                <input asp-for="aciklama" class="form-control" />
+                <span asp-validation-for="aciklama" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="konumBilgisi" class="control-label"></label>
+                <input asp-for="konumBilgisi" class="form-control" />
+                <span asp-validation-for="konumBilgisi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
