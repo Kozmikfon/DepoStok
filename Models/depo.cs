@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace DepoStok.Models
 {
@@ -7,17 +8,21 @@ namespace DepoStok.Models
         [Key]
         public int depoId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [StringLength(100)]
-       public string depoAd {  get; set; }
+        [DisplayName("Depo İsmi:")]
+        public string depoAd {  get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
+        [DisplayName("Raf Bilgisi:")]
         public string rafBilgisi { get; set; }
 
         [MaxLength(500)]
+        [DisplayName("Açıklama:")]
         public string? aciklama { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
+        [DisplayName("Konum Bilgisi:")]
         public string konumBilgisi { get; set; }
 
 

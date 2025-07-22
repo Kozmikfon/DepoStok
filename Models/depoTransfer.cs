@@ -1,30 +1,39 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DepoStok.Models
 {
+    
     public class depoTransfer
     {
         [Key]
         public int transferId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Bu alan boş geçilemez")]
         [StringLength(50)]
+        [DisplayName("Transfer Numarası:")]
+
         public string transferNo { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
+        [DisplayName("Kaynak Depo Numarası::")]
         public int kaynakDepoId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
+        [DisplayName("Hedef Depo Numarası:")]
         public int hedefDepoId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
+        [DisplayName("Transfer Tarihi:")]
         public DateTime transferTarihi { get; set; }
 
         [MaxLength(500)]
+        [DisplayName("Açıklama:")]
         public string? aciklama { get; set; }
 
         [MaxLength(100)]
+        [DisplayName("Seri Numarası:")]
         public string? seriNo { get; set; }
 
         [ForeignKey(nameof(kaynakDepoId))]

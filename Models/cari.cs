@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace DepoStok.Models
 {
@@ -9,6 +10,7 @@ namespace DepoStok.Models
 
         [Required]
         [MaxLength(100)]
+        
         public string unvan { get; set; } = null!;
 
         [Required]

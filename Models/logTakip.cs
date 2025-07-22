@@ -8,10 +8,10 @@ namespace DepoStok.Models
         [Key]
         public int islemId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
         public int kullaniciId { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Bu alan boş geçilemez")]
         public string tabloAdi {  get; set; }
 
         [Required]
