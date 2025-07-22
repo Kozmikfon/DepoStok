@@ -1,0 +1,78 @@
+﻿@model IEnumerable<DepoStok.Models.stok>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_DashboardLayout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Malzeme)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Depo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HareketTarihi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Miktar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HareketTipi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReferansId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Aciklama)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SeriNo)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Malzeme.malzemeAdi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Depo.depoAd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HareketTarihi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Miktar)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.HareketTipi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReferansId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Aciklama)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SeriNo)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.HareketId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.HareketId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.HareketId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
