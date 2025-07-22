@@ -30,6 +30,7 @@ namespace DepoStok.Models
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [DisplayName("Kullanım Durumu:")]
         public bool aktifPasif {  get; set; }
+
         [DisplayName("Açıklama:")]
         public string? aciklama { get; set; } 
 

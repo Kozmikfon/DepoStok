@@ -19,7 +19,8 @@ namespace DepoStok.Models
         public string email { get; set; }=null!;
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
-        [MaxLength(100)]
+        [MaxLength(50)]
+        [MinLength(8,ErrorMessage ="Sekiz karakterden az şifre olamaz")]
         [DisplayName("Şifre:")]
         public string password { get; set; } = null!;
 

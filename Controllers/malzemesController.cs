@@ -46,6 +46,7 @@ namespace DepoStok.Controllers
         // GET: malzemes/Create
         public IActionResult Create()
         {
+            ViewData["malzemeId"] = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi");// malzemeyi dropdown ile seçmek
             return View();
         }
 
@@ -62,6 +63,7 @@ namespace DepoStok.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["malzemeId"] = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi");
             return View(malzeme);
         }
 
@@ -74,6 +76,7 @@ namespace DepoStok.Controllers
             }
 
             var malzeme = await _context.malzemeler.FindAsync(id);
+            ViewData["malzemeId"] = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi");
             if (malzeme == null)
             {
                 return NotFound();
@@ -113,6 +116,7 @@ namespace DepoStok.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["malzemeId"] = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi");
             return View(malzeme);
         }
 
