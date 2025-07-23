@@ -23,7 +23,7 @@
             <a class="btn btn-primary" href="#signup">Sign Up</a>
         </div>
     </nav>
-    @RenderBody()
+    
     <!-- Masthead-->
     <header class="masthead">
         <div class="container position-relative">
@@ -100,6 +100,7 @@
             </div>
         </div>
     </section>
+    @RenderBody()
     <!-- Image Showcases-->
     <section class="showcase">
         <div class="container-fluid p-0">
@@ -241,6 +242,29 @@
     <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
     <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
     <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready.(function(){
+            $("StokSelect".change(function(){
+                var deger=$(this).val();
+                $.ajax({
+                    method:'POST',
+                    url:'/Products/Stok',
+                    DataTransfer={id:deger},
+                    datatype:'json',
+                    succes:function (data) {
+                        $.each(data,function(i,row){
+                            $("MalzemeSelect").append('<option valuew='+row.va)
+                        }
+                    })
+                },error:function (data) {
+                    alert('Hata oluştu');
+                }
+            }
+        });  
+
+     </script>
     @await RenderSectionAsync("Scripts",required:false)
+
 </body>
 </html>

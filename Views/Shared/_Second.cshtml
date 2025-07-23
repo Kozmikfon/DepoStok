@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Depo Stok Uygulaması</title>
+    <link rel="icon" type="image/x-icon" href="/Demo/assets/favicon.ico" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic" rel="stylesheet" />
+    <link href="/Demo/css/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-light bg-light static-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Depo Stok</a>
+            <a class="btn btn-primary" href="#signup">Kayıt Ol</a>
+        </div>
+    </nav>
+
+    <!-- Ana Başlık -->
+    <header class="masthead">
+        <div class="container position-relative">
+            <div class="row justify-content-center">
+                <div class="col-xl-6">
+                    <div class="text-center text-white">
+                        <h1 class="mb-5">Depo ve stoklarınızı kolayca yönetin!</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Özellikler -->
+    <section class="features-icons bg-light text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex"><i class="bi-box-seam m-auto text-primary"></i></div>
+                        <h3>Stok Takibi</h3>
+                        <p class="lead mb-0">Stok giriş ve çıkışlarını anlık takip edin.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-5 mb-lg-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex"><i class="bi-house m-auto text-primary"></i></div>
+                        <h3>Depo Yönetimi</h3>
+                        <p class="lead mb-0">Tüm depoları merkezi bir panelden yönetin.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="features-icons-item mx-auto mb-0 mb-lg-3">
+                        <div class="features-icons-icon d-flex"><i class="bi-clock-history m-auto text-primary"></i></div>
+                        <h3>İşlem Geçmişi</h3>
+                        <p class="lead mb-0">Tüm hareketleri geçmişe dönük inceleyin.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RenderBody alanı -->
+    @RenderBody()
+
+    <!-- Footer -->
+    <footer class="footer bg-light">
+        <div class="container text-center">
+            <p class="text-muted small mb-0">&copy; 2025 - Depo Stok Uygulaması</p>
+        </div>
+    </footer>
+
+    <!-- Scriptler -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/Demo/js/scripts.js"></script>
+    <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

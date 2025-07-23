@@ -57,10 +57,11 @@ namespace DepoStok.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             //irsaliye irsaaliyedetay ilişkisi
+
             modelBuilder.Entity<irsaliyeDetay>()
-                .HasOne(id=>id.irsaliye)
-                .WithMany()
-                .HasForeignKey(id=>id.irsaliyeId)
+                .HasOne(d => d.irsaliye)
+                .WithMany(i => i.irsaliyeDetaylari)
+                .HasForeignKey(d => d.irsaliyeId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             //malzeme irsaliyedetay
@@ -72,9 +73,9 @@ namespace DepoStok.Data
 
             //depo transfer ve detayı ilişkisi
             modelBuilder.Entity<depoTransferDetay>()
-                .HasOne(id=> id.depoTransfer)
-                .WithMany()
-                .HasForeignKey(d=>d.malzemeId)
+                .HasOne(d => d.depoTransfer)
+                .WithMany(dt => dt.depoTransferDetaylari)
+                .HasForeignKey(d => d.transferId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<depoTransferDetay>()

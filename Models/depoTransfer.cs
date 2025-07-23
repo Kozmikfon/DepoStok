@@ -41,6 +41,7 @@ namespace DepoStok.Models
 
         [ForeignKey(nameof(hedefDepoId))]
         public depo? hedefDepo { get; set; }
+        public ICollection<depoTransferDetay> depoTransferDetaylari { get; set; } = new List<depoTransferDetay>();
 
     }
 }
