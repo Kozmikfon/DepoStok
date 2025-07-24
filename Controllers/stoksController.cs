@@ -61,7 +61,7 @@ namespace DepoStok.Controllers
         }
 
         // POST: stoks/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
+                        // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
 
         [HttpPost]
@@ -69,10 +69,10 @@ namespace DepoStok.Controllers
         public async Task<IActionResult> Create([Bind("HareketId,MalzemeId,DepoId,HareketTarihi,Miktar,HareketTipi,ReferansId,Aciklama,SeriNo,carId")] stok stok)
         {
             if (ModelState.IsValid)
-            {
+                {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-                // stok servisini çağır
+                // stok servisini çağır         
                 await _stokService.AddStokAsync(stok, userId, stok.carId.Value);// 'carId' burada nereden geliyor bilmiyorum, onunla ilgili bilgi eksik olabilir
 
                 // log kaydı
