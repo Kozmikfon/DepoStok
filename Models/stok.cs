@@ -40,6 +40,7 @@ namespace DepoStok.Models
 
         [DisplayName("Açıklama:")]
         public string? Aciklama { get; set; }
+        
         public int? carId { get; set; } // cari ilişkisi için
 
         [ForeignKey(nameof(carId))]

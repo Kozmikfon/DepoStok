@@ -23,10 +23,17 @@ namespace DepoStok.Services
 
         public async Task AddStokAsync(stok s, string userId, int carId)
         {
-            // 1. Stok ekleniyor
-            _db.stoklar.Add(s);
-            await _db.SaveChangesAsync();
+            try
+            {
+                _db.stoklar.Add(s);
+                await _db.SaveChangesAsync();
+            }// 1. Stok ekleniyor
 
+            catch (Exception ex)
+            {
+                // Bunu yaz:
+                throw new Exception("Stok eklenemedi: " + ex.Message, ex);
+            }
             // 2. İrsaliye oluşturuluyor
             var irsaliye = new irsaliye
             {
