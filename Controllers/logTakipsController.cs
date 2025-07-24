@@ -48,7 +48,7 @@ namespace DepoStok.Controllers
         // GET: logTakips/Create
         public IActionResult Create()
         {
-            ViewData["kullaniciId"] = new SelectList(_context.kullanicilar, "kullaniciId", "adSoyad");
+            ViewData["kullaniciId"] = new SelectList(_context.Users, "Id", "Id");
             return View();
         }
 
@@ -57,7 +57,7 @@ namespace DepoStok.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("islemId,kullaniciId,tabloAdi,islemTipi,islemTarihi,detay")] logTakip logTakip)
+        public async Task<IActionResult> Create([Bind("islemId,tabloAdi,islemTipi,islemTarihi,detay,kullaniciId")] logTakip logTakip)
         {
             if (ModelState.IsValid)
             {
@@ -65,7 +65,7 @@ namespace DepoStok.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["kullaniciId"] = new SelectList(_context.kullanicilar, "kullaniciId", "adSoyad", logTakip.kullaniciId);
+            ViewData["kullaniciId"] = new SelectList(_context.Users, "Id", "Id", logTakip.kullaniciId);
             return View(logTakip);
         }
 
@@ -82,7 +82,7 @@ namespace DepoStok.Controllers
             {
                 return NotFound();
             }
-            ViewData["kullaniciId"] = new SelectList(_context.kullanicilar, "kullaniciId", "adSoyad", logTakip.kullaniciId);
+            ViewData["kullaniciId"] = new SelectList(_context.Users, "Id", "Id", logTakip.kullaniciId);
             return View(logTakip);
         }
 
@@ -91,7 +91,7 @@ namespace DepoStok.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("islemId,kullaniciId,tabloAdi,islemTipi,islemTarihi,detay")] logTakip logTakip)
+        public async Task<IActionResult> Edit(int id, [Bind("islemId,tabloAdi,islemTipi,islemTarihi,detay,kullaniciId")] logTakip logTakip)
         {
             if (id != logTakip.islemId)
             {
@@ -118,7 +118,7 @@ namespace DepoStok.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["kullaniciId"] = new SelectList(_context.kullanicilar, "kullaniciId", "adSoyad", logTakip.kullaniciId);
+            ViewData["kullaniciId"] = new SelectList(_context.Users, "Id", "Id", logTakip.kullaniciId);
             return View(logTakip);
         }
 

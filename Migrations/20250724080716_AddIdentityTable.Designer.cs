@@ -4,6 +4,7 @@ using DepoStok.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DepoStok.Migrations
 {
     [DbContext(typeof(StokDbContext))]
-    partial class StokDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250724080716_AddIdentityTable")]
+    partial class AddIdentityTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -236,6 +239,37 @@ namespace DepoStok.Migrations
                     b.ToTable("irsaliyeDetaylari");
                 });
 
+            modelBuilder.Entity("DepoStok.Models.kullanici", b =>
+                {
+                    b.Property<int>("kullaniciId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("kullaniciId"));
+
+                    b.Property<string>("adSoyad")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<DateTime>("olusturulmaTarihi")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("password")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("kullaniciId");
+
+                    b.ToTable("kullanicilar");
+                });
+
             modelBuilder.Entity("DepoStok.Models.logTakip", b =>
                 {
                     b.Property<int>("islemId")
@@ -255,9 +289,8 @@ namespace DepoStok.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("kullaniciId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("kullaniciId")
+                        .HasColumnType("int");
 
                     b.Property<string>("tabloAdi")
                         .IsRequired()
@@ -340,16 +373,11 @@ namespace DepoStok.Migrations
                     b.Property<string>("SeriNo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("carId")
-                        .HasColumnType("int");
-
                     b.HasKey("HareketId");
 
                     b.HasIndex("DepoId");
 
                     b.HasIndex("MalzemeId");
-
-                    b.HasIndex("carId");
 
                     b.ToTable("stoklar");
                 });
@@ -499,10 +527,12 @@ namespace DepoStok.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("nvarchar(max)");
@@ -539,10 +569,12 @@ namespace DepoStok.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<string>("Value")
                         .HasColumnType("nvarchar(max)");
@@ -630,7 +662,7 @@ namespace DepoStok.Migrations
 
             modelBuilder.Entity("DepoStok.Models.logTakip", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "kullanici")
+                    b.HasOne("DepoStok.Models.kullanici", "kullanici")
                         .WithMany()
                         .HasForeignKey("kullaniciId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -653,16 +685,9 @@ namespace DepoStok.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DepoStok.Models.cari", "cari")
-                        .WithMany()
-                        .HasForeignKey("carId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Depo");
 
                     b.Navigation("Malzeme");
-
-                    b.Navigation("cari");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

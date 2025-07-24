@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,10 +9,6 @@ namespace DepoStok.Models
     {
         [Key]
         public int islemId { get; set; }
-
-        [Required(ErrorMessage = "Bu alan boş geçilemez")]
-        [DisplayName("Kullanıcı Numarası:")]
-        public int kullaniciId { get; set; }
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [DisplayName("Tablo Adı:")]
@@ -28,8 +25,11 @@ namespace DepoStok.Models
         [MaxLength(500)]
         [DisplayName("İşlem Detayı:")]
         public string? detay {  get; set; }
+        // Bu kullanıcı artık IdentityUser olacak
+        public string kullaniciId { get; set; } = null!;
 
-        [ForeignKey(nameof(kullaniciId))]
-        public kullanici kullanici { get; set; } = null!;
+        [ForeignKey("kullaniciId")]
+        public IdentityUser kullanici { get; set; } = null!;
+
     }
 }

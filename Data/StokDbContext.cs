@@ -1,9 +1,11 @@
 ﻿using DepoStok.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DepoStok.Data
 {
-    public class StokDbContext : DbContext
+    public class StokDbContext : IdentityDbContext<IdentityUser>
     {
         public StokDbContext(DbContextOptions<StokDbContext> options) : base(options) { }
 
@@ -11,7 +13,7 @@ namespace DepoStok.Data
         public DbSet<depo> depolar {  get; set; }
         public DbSet<stok> stoklar { get; set; }
         public DbSet<cari> cariler {  get; set; }
-        public DbSet<kullanici> kullanicilar { get; set; }
+        
         public DbSet<logTakip> logTakipler { get; set; }
         public DbSet<depoTransfer> depoTransferleri { get; set; }
         public DbSet<depoTransferDetay> depoTransferDetaylari { get; set; }
@@ -42,12 +44,12 @@ namespace DepoStok.Data
                 .HasForeignKey(s=>s.DepoId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            //kullanici log takip ilişkisi
-            modelBuilder.Entity<logTakip>()
-                 .HasOne(l => l.kullanici)
-                 .WithMany()
-                 .HasForeignKey(l => l.kullaniciId)
-                 .OnDelete(DeleteBehavior.Restrict);
+            modelBuilder.Entity<stok>()
+    .HasOne(s => s.cari)
+    .WithMany()
+    .HasForeignKey(s => s.carId)
+    .OnDelete(DeleteBehavior.Restrict);
+
 
             //cari irsaliye ilişki
             modelBuilder.Entity<irsaliye>()
@@ -55,6 +57,13 @@ namespace DepoStok.Data
                 .WithMany()
                 .HasForeignKey(i=>i.carId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<logTakip>()
+                .HasOne(l => l.kullanici)
+                .WithMany()
+                .HasForeignKey(l => l.kullaniciId)
+                .OnDelete(DeleteBehavior.Restrict);
+
 
             //irsaliye irsaaliyedetay ilişkisi
 

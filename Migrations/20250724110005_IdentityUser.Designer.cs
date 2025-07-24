@@ -4,6 +4,7 @@ using DepoStok.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DepoStok.Migrations
 {
     [DbContext(typeof(StokDbContext))]
-    partial class StokDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250724110005_IdentityUser")]
+    partial class IdentityUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,16 +343,11 @@ namespace DepoStok.Migrations
                     b.Property<string>("SeriNo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("carId")
-                        .HasColumnType("int");
-
                     b.HasKey("HareketId");
 
                     b.HasIndex("DepoId");
 
                     b.HasIndex("MalzemeId");
-
-                    b.HasIndex("carId");
 
                     b.ToTable("stoklar");
                 });
@@ -653,16 +651,9 @@ namespace DepoStok.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DepoStok.Models.cari", "cari")
-                        .WithMany()
-                        .HasForeignKey("carId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.Navigation("Depo");
 
                     b.Navigation("Malzeme");
-
-                    b.Navigation("cari");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
