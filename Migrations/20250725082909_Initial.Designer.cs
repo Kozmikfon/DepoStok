@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DepoStok.Migrations
 {
     [DbContext(typeof(StokDbContext))]
-    [Migration("20250724131014_CarIdFix")]
-    partial class CarIdFix
+    [Migration("20250725082909_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -192,7 +192,7 @@ namespace DepoStok.Migrations
                     b.Property<decimal>("toplamTutar")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("transferId")
+                    b.Property<int?>("transferId")
                         .HasColumnType("int");
 
                     b.HasKey("irsaliyeId");
@@ -343,7 +343,7 @@ namespace DepoStok.Migrations
                     b.Property<string>("SeriNo")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("carId")
+                    b.Property<int>("carId")
                         .HasColumnType("int");
 
                     b.HasKey("HareketId");
@@ -603,9 +603,7 @@ namespace DepoStok.Migrations
 
                     b.HasOne("DepoStok.Models.depoTransfer", "depoTransfer")
                         .WithMany()
-                        .HasForeignKey("transferId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("transferId");
 
                     b.Navigation("cari");
 
@@ -659,7 +657,8 @@ namespace DepoStok.Migrations
                     b.HasOne("DepoStok.Models.cari", "cari")
                         .WithMany()
                         .HasForeignKey("carId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Depo");
 

@@ -57,6 +57,7 @@ namespace DepoStok.Data
                 .WithMany()
                 .HasForeignKey(i=>i.carId)
                 .OnDelete(DeleteBehavior.Restrict);
+            
 
             modelBuilder.Entity<logTakip>()
                 .HasOne(l => l.kullanici)
