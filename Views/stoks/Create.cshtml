@@ -58,13 +58,30 @@
                 <span asp-validation-for="SeriNo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-            <div class="form-group">
                 <label asp-for="carId" class="control-label"></label>
-                <select asp-for="carId" class="form-control" asp-items="ViewBag.carId"></select>
+                <select asp-for="carId" class="form-control" asp-items="ViewBag.carId">
+                    <option value="">-- Cari Seçiniz --</option>
+                </select>
                 <span asp-validation-for="carId" class="text-danger"></span>
             </div>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div class="alert alert-danger">
+                    <strong>Form hatalı:</strong>
+                    <ul>
+                        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                        {
+                            <li>@error.ErrorMessage</li>
+                        }
+                    </ul>
+                </div>
+            }
+
+           
 
         </form>
     </div>

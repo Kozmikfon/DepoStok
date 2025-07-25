@@ -1,9 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using MediatR;
-using DepoStok.Data;
+﻿using DepoStok.Data;
 using DepoStok.Events.Domain;
 using DepoStok.Models;
+using DepoStok.Models.Enums;
+using MediatR;
+using System;
+using System.Threading.Tasks;
 
 
 namespace DepoStok.Services
@@ -34,21 +35,36 @@ namespace DepoStok.Services
                 // Bunu yaz:
                 throw new Exception("Stok eklenemedi: " + ex.Message, ex);
             }
+            var irsaliyeTipi = s.HareketTipi switch
+            {
+                StokHareketTipi.Giris => "Giriş",
+                StokHareketTipi.Cikis => "Çıkış",
+                StokHareketTipi.TransferGiris => "Depo Transferi Girişi",
+                StokHareketTipi.TransferCikis=>"Depo Transfer Çıkışı",
+                _ => throw new InvalidOperationException("Bilinmeyen hareket tipi")
+            };
             // 2. İrsaliye oluşturuluyor
             var irsaliye = new irsaliye
             {
                 carId = carId,
+                irsaliyeNo = "IR" + DateTime.Now.Ticks,
                 irsaliyeTarihi = DateTime.Now,
-                irsaliyeNo = "IR" + DateTime.Now.Ticks.ToString(),
+                irsaliyeTipi = irsaliyeTipi,
+                toplamTutar = 0,            // İsteğe göre hesaplanabilir
+                transferId = 1,            // Gerekirse gerçek ID ile değiştirilmeli
+                durum = true,
+                aciklama = s.Aciklama,   // stok üzerinden açıklama geliyorsa
+
                 irsaliyeDetaylari = new List<irsaliyeDetay>
+    {
+        new irsaliyeDetay
         {
-            new irsaliyeDetay
-            {
-                malzemeId = s.MalzemeId,
-                miktar = s.Miktar
-            }
+            malzemeId = s.MalzemeId,
+            miktar    = s.Miktar
         }
+    }
             };
+
 
             _db.irsaliyeler.Add(irsaliye);
             await _db.SaveChangesAsync();

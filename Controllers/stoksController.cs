@@ -29,7 +29,11 @@ namespace DepoStok.Controllers
         // GET: stoks
         public async Task<IActionResult> Index()
         {
-            var stokDbContext = _context.stoklar.Include(s => s.Depo).Include(s => s.Malzeme);
+            var stokDbContext = _context.stoklar
+    .Include(s => s.Depo)
+    .Include(s => s.Malzeme)
+    .Include(s => s.cari);
+
             return View(await stokDbContext.ToListAsync());
         }
 
@@ -68,32 +72,50 @@ namespace DepoStok.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("HareketId,MalzemeId,DepoId,HareketTarihi,Miktar,HareketTipi,ReferansId,Aciklama,SeriNo,carId")] stok stok)
         {
-            if (ModelState.IsValid)
-                {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-                // stok servisini çağır         
-                await _stokService.AddStokAsync(stok, userId, stok.carId.Value);// 'carId' burada nereden geliyor bilmiyorum, onunla ilgili bilgi eksik olabilir
-
-                // log kaydı
-                var detay = $"Stok hareketi eklendi: MalzemeId={stok.MalzemeId}, Miktar={stok.Miktar}, Tip={stok.HareketTipi}";
-                await _logService.LogIslemAsync(userId, "stok", "Ekleme", detay);
-
-                return RedirectToAction(nameof(Index));
+            if (stok.carId == null)
+            {
+                ModelState.AddModelError("carId", "Cari seçimi zorunludur.");
             }
 
-            LoadDropdowns(stok);
-            return View(stok);
+            if (!ModelState.IsValid)
+            {
+                LoadDropdowns(stok);
+                return View(stok);
+            }
+
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            await _stokService.AddStokAsync(stok, userId, stok.carId.Value);
+
+            var detay = $"Stok hareketi eklendi: MalzemeId={stok.MalzemeId}, Miktar={stok.Miktar}, Tip={stok.HareketTipi}";
+            await _logService.LogIslemAsync(userId, "stok", "Ekleme", detay);
+
+            return RedirectToAction(nameof(Index));
+
+            
         }
 
-        private void LoadDropdowns(stok s=null)
+        private void LoadDropdowns(stok s = null)
         {
-            ViewData["DepoId"] = new SelectList(_context.depolar, "depoId", "depoAd", s?.DepoId);
-            ViewData["MalzemeId"] = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi", s?.MalzemeId);
-            ViewData["carId"] = new SelectList(_context.cariler, "carId", "unvan", s?.carId);
+            ViewData["DepoId"] = new SelectList(_context.depolar.ToList(), "depoId", "depoAd", s?.DepoId);
+            ViewData["MalzemeId"] = new SelectList(_context.malzemeler.ToList(), "malzemeId", "malzemeAdi", s?.MalzemeId);
 
-
+            ViewData["carId"] = new SelectList(
+                new List<SelectListItem>
+                {
+            new SelectListItem { Value = "", Text = "-- Cari Seçiniz --" }
+                }.Concat(
+                    _context.cariler.Select(c => new SelectListItem
+                    {
+                        Value = c.carId.ToString(),
+                        Text = c.unvan
+                    })
+                ),
+                "Value", "Text", s?.carId?.ToString()
+            );
         }
+
+
 
         // GET: stoks/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -118,7 +140,7 @@ namespace DepoStok.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("HareketId,MalzemeId,DepoId,HareketTarihi,Miktar,HareketTipi,ReferansId,Aciklama,SeriNo")] stok stok)
+        public async Task<IActionResult> Edit(int id, [Bind("HareketId,MalzemeId,DepoId,HareketTarihi,Miktar,HareketTipi,ReferansId,Aciklama,SeriNo,carId")] stok stok)
         {
             if (id != stok.HareketId)
             {
@@ -147,6 +169,8 @@ namespace DepoStok.Controllers
             }
             ViewData["DepoId"] = new SelectList(_context.depolar, "depoId", "depoAd", stok.DepoId);
             ViewData["MalzemeId"] = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi", stok.MalzemeId);
+            ViewData["carId"] = new SelectList(_context.cariler.ToList(), "carId", "unvan", stok.carId);
+
             return View(stok);
         }
 

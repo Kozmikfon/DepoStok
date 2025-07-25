@@ -40,11 +40,12 @@ namespace DepoStok.Models
 
         [DisplayName("Açıklama:")]
         public string? Aciklama { get; set; }
-        
+
+        [Required(ErrorMessage = "Cari seçimi zorunludur.")]
         public int? carId { get; set; } // cari ilişkisi için
 
         [ForeignKey(nameof(carId))]
-        public cari cari { get; set; } // opsiyonel navigation
+        public cari? cari { get; set; } // opsiyonel navigation
 
 
         [DisplayName("Seri Numarası:")]
