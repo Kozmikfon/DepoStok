@@ -14,13 +14,13 @@ namespace DepoStok.Services
     {
         private readonly StokDbContext _db;
         private readonly IMediator _mediator;
-        private readonly LogService _logService;
+        //private readonly LogService _logService;
 
-        public StokService(StokDbContext db, IMediator mediator, LogService logService)
+        public StokService(StokDbContext db, IMediator mediator)
         {
             _db = db;
             _mediator = mediator;
-            _logService = logService;
+            
         }
 
         public async Task AddStokAsync(stok s, string userId, int carId)
@@ -78,18 +78,18 @@ namespace DepoStok.Services
                 _db.irsaliyeler.Add(irsaliye);
                 await _db.SaveChangesAsync();
 
-                // 5. Log yazılıyor
-                var log = new logTakip
-                {
-                    kullaniciId = userId,
-                    islemTipi = "Stok Ekleme",
-                    tabloAdi = "stok",
-                    detay = $"MalzemeId={s.MalzemeId}, Miktar={s.Miktar}, Tip={s.HareketTipi}",
-                    islemTarihi = DateTime.Now
-                };
+                //// 5. Log yazılıyor
+                //var log = new logTakip
+                //{
+                //    kullaniciId = userId,
+                //    islemTipi = "Stok Ekleme",
+                //    tabloAdi = "stok",
+                //    detay = $"MalzemeId={s.MalzemeId}, Miktar={s.Miktar}, Tip={s.HareketTipi}",
+                //    islemTarihi = DateTime.Now
+                //};
 
-                _db.logTakipler.Add(log);
-                await _db.SaveChangesAsync();
+                //_db.logTakipler.Add(log);
+                //await _db.SaveChangesAsync();
             }
             catch (Exception ex)
             {
