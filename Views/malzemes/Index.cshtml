@@ -1,0 +1,72 @@
+﻿@model IEnumerable<DepoStok.Models.malzeme>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.malzemeAdi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.birim)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.kategori)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.minStokMiktar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.barkodNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.aktifPasif)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.aciklama)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.malzemeAdi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.birim)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.kategori)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.minStokMiktar)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.barkodNo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.aktifPasif)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.aciklama)
+            </td>
+            <td>
+                    <a asp-action="Edit" asp-route-id="@item.malzemeId" class="btn btn-sm btn-warning" >Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.malzemeId" class="btn btn-sm btn-info text-white" >Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.malzemeId" class="btn btn-sm btn-danger" >Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

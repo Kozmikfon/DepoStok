@@ -1,0 +1,54 @@
+﻿@model IEnumerable<DepoStok.Models.depo>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.depoAd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.rafBilgisi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.aciklama)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.konumBilgisi)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.depoAd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.rafBilgisi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.aciklama)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.konumBilgisi)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.depoId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.depoId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.depoId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
