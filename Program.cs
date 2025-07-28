@@ -1,58 +1,44 @@
-
 using DepoStok.Data;
-using DepoStok.Services;
+using DepoStok.Models.Identity;
+ // SeedData sınıfın buradaysa
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Add services
 builder.Services.AddControllersWithViews();
-
 builder.Services.AddRazorPages();
-builder.Services.AddDbContext<StokDbContext>(options=>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//logservice
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<LogService>();
+builder.Services.AddDbContext<StokDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<StokDbContext>();
 
-//servisle irsaliye olu�turma
-builder.Services.AddScoped<StokService>();//create bas�ld���nda servis cagrilir
-builder.Services.AddMediatR(cfg =>
-cfg.RegisterServicesFromAssembly(typeof(StokService).Assembly)
-);
-
-//IDentity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<StokDbContext>()
-    .AddDefaultUI()
-    .AddDefaultTokenProviders();
-
-
-
-
-builder.Services.ConfigureApplicationCookie(options =>
+// Identity
+builder.Services.AddIdentity<AppUser, IdentityRole<int>>(options =>
 {
-    options.LoginPath = "/Identity/Account/Login";
-    options.AccessDeniedPath = "/Identity/Account/AccesDenied";
-});
+    options.SignIn.RequireConfirmedAccount = false;
+})
+.AddEntityFrameworkStores<StokDbContext>()
+.AddDefaultTokenProviders();
+
+// HttpContext accessor for logging, etc.
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Seed roles & admin user
+using (var scope = app.Services.CreateScope())
+{
+    await SeedData.SeedRoles(scope.ServiceProvider);
+}
+
+// Configure middleware
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
-}
-
-//roller
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    await SeedData.InitializeAsync(services);
 }
 
 app.UseHttpsRedirection();

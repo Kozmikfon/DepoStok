@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using DepoStok.Models.Identity;
+using Microsoft.AspNetCore.Identity;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -26,10 +27,11 @@ namespace DepoStok.Models
         [DisplayName("İşlem Detayı:")]
         public string? detay {  get; set; }
         // Bu kullanıcı artık IdentityUser olacak
-        public string kullaniciId { get; set; } = null!;
+        public int AppUserId { get; set; }
 
-        [ForeignKey("kullaniciId")]
-        public IdentityUser kullanici { get; set; } = null!;
+        [ForeignKey(nameof(AppUserId))]
+        public AppUser AppUser { get; set; } = null!;
+
 
     }
 }

@@ -47,6 +47,14 @@ namespace DepoStok.Models
         [ForeignKey(nameof(carId))]
         public cari cari { get; set; }
 
+        [Required]
+        [DisplayName("Depo:")]
+        public int depoId { get; set; }
+
+        [ForeignKey(nameof(depoId))]
+        public depo? depo { get; set; }
+
+
         public ICollection<irsaliyeDetay> irsaliyeDetaylari { get; set; } = new List<irsaliyeDetay>();
 
     }

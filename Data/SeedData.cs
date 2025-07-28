@@ -1,46 +1,43 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Threading.Tasks;
+﻿using DepoStok.Models.Identity;
+using Microsoft.AspNetCore.Identity;
 
-namespace DepoStok.Data
+public static class SeedData
 {
-    public static class SeedData
+    public static async Task SeedRoles(IServiceProvider serviceProvider)
     {
-        public static async Task InitializeAsync(IServiceProvider serviceProvider)
+        var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
+        var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
+
+        // 1. Gerekli rollerin varlığını kontrol et, yoksa oluştur
+        string[] roles = { "admin", "kullanici" };
+        foreach (var role in roles)
         {
-            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            var userManager = serviceProvider.GetRequiredService<UserManager<IdentityUser>>();
+            if (!await roleManager.RoleExistsAsync(role))
+                await roleManager.CreateAsync(new IdentityRole<int>(role));
+        }
 
-            string[] roles = { "Çalışan", "Admin" };
-
-            foreach (var role in roles)
+        // 2. Varsayılan admin kullanıcı oluşturuluyor
+        var adminEmail = "admin@depo.com";
+        var adminUser = await userManager.FindByEmailAsync(adminEmail);
+        if (adminUser == null)
+        {
+            var user = new AppUser
             {
-                if (!await roleManager.RoleExistsAsync(role))
-                {
-                    await roleManager.CreateAsync(new IdentityRole(role));
-                }
+                UserName = adminEmail,
+                Email = adminEmail,
+                AdSoyad = "Yönetici",
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(user, "Admin123!"); // Şifre karma yapılır
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(user, "admin");
             }
-
-            // Varsayılan kullanıcı
-            string email = "calisan@depo.com";
-            string password = "Calisan123!";
-
-            var user = await userManager.FindByEmailAsync(email);
-            if (user == null)
+            else
             {
-                user = new IdentityUser
-                {
-                    UserName = email,
-                    Email = email,
-                    EmailConfirmed = true
-                };
-
-                var result = await userManager.CreateAsync(user, password);
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(user, "Çalışan");
-                }
+                // Geliştiriciye hata loglamak için mesaj
+                throw new Exception($"Admin kullanıcı oluşturulamadı: {string.Join(", ", result.Errors.Select(e => e.Description))}");
             }
         }
     }

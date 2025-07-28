@@ -19,7 +19,7 @@ namespace DepoStok.Models
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [DisplayName("Miktar:")]
-        public decimal miktar {  get; set; }
+        public decimal miktar { get; set; }
 
         [ForeignKey(nameof(transferId))]
         public depoTransfer? depoTransfer { get; set; }

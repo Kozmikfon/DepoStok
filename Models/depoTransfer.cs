@@ -14,7 +14,7 @@ namespace DepoStok.Models
         [StringLength(50)]
         [DisplayName("Transfer Numarası:")]
 
-        public string transferNo { get; set; } = null!;
+        public int transferNo { get; set; } 
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [DisplayName("Kaynak Depo Numarası::")]

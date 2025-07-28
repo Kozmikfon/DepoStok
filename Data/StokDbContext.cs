@@ -1,11 +1,12 @@
 ﻿using DepoStok.Models;
+using DepoStok.Models.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace DepoStok.Data
 {
-    public class StokDbContext : IdentityDbContext<IdentityUser>
+    public class StokDbContext : IdentityDbContext<AppUser,IdentityRole<int>,int >
     {
         public StokDbContext(DbContextOptions<StokDbContext> options) : base(options) { }
 
@@ -13,8 +14,8 @@ namespace DepoStok.Data
         public DbSet<depo> depolar {  get; set; }
         public DbSet<stok> stoklar { get; set; }
         public DbSet<cari> cariler {  get; set; }
-        
         public DbSet<logTakip> logTakipler { get; set; }
+        //public DbSet<kullanici> kullanicilar { get; set; }
         public DbSet<depoTransfer> depoTransferleri { get; set; }
         public DbSet<depoTransferDetay> depoTransferDetaylari { get; set; }
         public DbSet<irsaliye> irsaliyeler { get; set; }
@@ -60,9 +61,9 @@ namespace DepoStok.Data
             
 
             modelBuilder.Entity<logTakip>()
-                .HasOne(l => l.kullanici)
+                .HasOne(l => l.AppUser)
                 .WithMany()
-                .HasForeignKey(l => l.kullaniciId)
+                .HasForeignKey(l => l.AppUserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
 

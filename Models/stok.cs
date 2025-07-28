@@ -29,20 +29,20 @@ namespace DepoStok.Models
         public DateTime HareketTarihi { get; set; }
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
-        public int Miktar { get; set; }
+        public decimal Miktar { get; set; }
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [DisplayName("Hareket Tipi:")]
         public StokHareketTipi HareketTipi { get; set; }
 
         [DisplayName("Evrak Numarası:")]
-        public string? ReferansId { get; set; }
+        public int? ReferansId { get; set; } // int tanımlanacak irsaliyeye ait bilgiler bu ıd ile stokda tutulacak
 
         [DisplayName("Açıklama:")]
         public string? Aciklama { get; set; }
 
         [Required(ErrorMessage = "Cari seçimi zorunludur.")]
-        public int? carId { get; set; } // cari ilişkisi için
+        public int carId { get; set; } // cari ilişkisi için
 
         [ForeignKey(nameof(carId))]
         public cari? cari { get; set; } // opsiyonel navigation

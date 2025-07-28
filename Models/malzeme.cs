@@ -5,7 +5,6 @@ using System.ComponentModel.DataAnnotations;
 namespace DepoStok.Models
 {
     public class malzeme
-
     {
         [Key]
         public int malzemeId { get; set; }
@@ -15,12 +14,12 @@ namespace DepoStok.Models
         public string malzemeAdi { get; set; } = null!;
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
-        [DisplayName("Birim:")]
+        [DisplayName("Birim Fiyat:")]
         public string? birim { get; set; }
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [DisplayName("Kategori:")]
-        public string? kategori { get; set; }
+        public string kategori { get; set; }
 
         [DisplayName("Minumum Stok Miktarı:")]
         public int minStokMiktar { get; set; }
@@ -33,6 +32,5 @@ namespace DepoStok.Models
 
         [DisplayName("Açıklama:")]
         public string? aciklama { get; set; } 
-
     }
 }
