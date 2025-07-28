@@ -46,6 +46,7 @@ namespace DepoStok.Controllers
         // GET: depoes/Create
         public IActionResult Create()
         {
+
             return View();
         }
 
