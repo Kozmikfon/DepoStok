@@ -8,7 +8,7 @@ public static class SeedData
         var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
         var userManager = serviceProvider.GetRequiredService<UserManager<AppUser>>();
 
-        // 1. Gerekli rollerin varlığını kontrol et, yoksa oluştur
+        // 1️⃣ Rolleri oluştur
         string[] roles = { "admin", "kullanici" };
         foreach (var role in roles)
         {
@@ -16,29 +16,48 @@ public static class SeedData
                 await roleManager.CreateAsync(new IdentityRole<int>(role));
         }
 
-        // 2. Varsayılan admin kullanıcı oluşturuluyor
-        var adminEmail = "admin@depo.com";
-        var adminUser = await userManager.FindByEmailAsync(adminEmail);
-        if (adminUser == null)
-        {
-            var user = new AppUser
-            {
-                UserName = adminEmail,
-                Email = adminEmail,
-                AdSoyad = "Yönetici",
-                EmailConfirmed = true
-            };
+        // 2️⃣ Admin kullanıcı oluştur
+        await CreateUserIfNotExists(
+            userManager,
+            email: "admin@depo.com",
+            adSoyad: "Yönetici",
+            password: "Admin123!",
+            role: "admin"
+        );
 
-            var result = await userManager.CreateAsync(user, "Admin123!"); // Şifre karma yapılır
-            if (result.Succeeded)
-            {
-                await userManager.AddToRoleAsync(user, "admin");
-            }
-            else
-            {
-                // Geliştiriciye hata loglamak için mesaj
-                throw new Exception($"Admin kullanıcı oluşturulamadı: {string.Join(", ", result.Errors.Select(e => e.Description))}");
-            }
-        }
+        // 3️⃣ Örnek normal kullanıcı oluştur
+        await CreateUserIfNotExists(
+            userManager,
+            email: "kullanici1@depo.com",
+            adSoyad: "Ahmet Kullanıcı",
+            password: "Kullanici123!",
+            role: "kullanici"
+        );
+    }
+
+    private static async Task CreateUserIfNotExists(
+        UserManager<AppUser> userManager,
+        string email,
+        string adSoyad,
+        string password,
+        string role)
+    {
+        var user = await userManager.FindByEmailAsync(email);
+        if (user != null)
+            return;
+
+        user = new AppUser
+        {
+            UserName = email,
+            Email = email,
+            AdSoyad = adSoyad,
+            EmailConfirmed = true
+        };
+
+        var result = await userManager.CreateAsync(user, password);
+        if (!result.Succeeded)
+            throw new Exception($"{email} kullanıcısı oluşturulamadı: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+
+        await userManager.AddToRoleAsync(user, role);
     }
 }

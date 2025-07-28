@@ -34,7 +34,26 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-controller="Home" asp-action="Privacy">Hakkında</a>
                         </li>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <span class="nav-link text-success">Merhaba, @User.Identity.Name</span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="d-inline">
+                                    <button type="submit" class="nav-link btn btn-link text-white">Çıkış</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="Identity" asp-page="/Account/Login">Giriş Yap</a>
+                            </li>
+                        }
                     </ul>
+
                 </div>
             </div>
         </nav>
