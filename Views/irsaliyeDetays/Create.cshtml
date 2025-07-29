@@ -13,18 +13,14 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
             <div class="form-group">
-                <label asp-for="irsaliyeId" class="control-label">İrsaliye Numarası</label>
-                <select asp-for="irsaliyeId" class="form-control" asp-items="ViewBag.irsaliyeId">
-                    <option value="">Seçiniz</option>
-                </select>
+                <label asp-for="irsaliyeId" class="control-label"></label>
+                <input asp-for="irsaliyeId" type="number" class="form-control" value="@ViewBag.irsaliyeId" />
                 <span asp-validation-for="irsaliyeId" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="malzemeId" class="control-label">Malzeme</label>
-                <select asp-for="malzemeId" class="form-control" asp-items="ViewBag.malzemeId">
-                    <option value="">Seçiniz</option>
-                </select>
+                <label asp-for="malzemeId" class="control-label"></label>
+                <input asp-for="malzemeId" type="number" class="form-control" />
                 <span asp-validation-for="malzemeId" class="text-danger"></span>
             </div>
 
@@ -41,12 +37,6 @@
             </div>
 
             <div class="form-group">
-                <label asp-for="araToplam" class="control-label"></label>
-                <input asp-for="araToplam" class="form-control" />
-                <span asp-validation-for="araToplam" class="text-danger"></span>
-            </div>
-
-            <div class="form-group">
                 <label asp-for="seriNo" class="control-label"></label>
                 <input asp-for="seriNo" class="form-control" />
                 <span asp-validation-for="seriNo" class="text-danger"></span>
@@ -54,14 +44,12 @@
 
             <div class="form-group mt-3">
                 <input type="submit" value="Detay Ekle" class="btn btn-primary" />
-                <a asp-action="Index" class="btn btn-secondary ms-2">Listeye Dön</a>
+                <a asp-controller="irsaliyes" asp-action="Index" class="btn btn-secondary ms-2">İrsaliye Listesine Dön</a>
             </div>
         </form>
     </div>
 </div>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @await Html.PartialAsync("_ValidationScriptsPartial")
 }

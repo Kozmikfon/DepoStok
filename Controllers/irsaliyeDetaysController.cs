@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DepoStok.Data;
@@ -19,139 +15,75 @@ namespace DepoStok.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        // GET: irsaliyeDetays/Create
+        public IActionResult Create(int? irsaliyeId = null)
         {
-            var stokDbContext = _context.irsaliyeDetaylari.Include(i => i.irsaliye).Include(i => i.malzeme);
-            return View(await stokDbContext.ToListAsync());
-        }
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var irsaliyeDetay = await _context.irsaliyeDetaylari
-                .Include(i => i.irsaliye)
-                .Include(i => i.malzeme)
-                .FirstOrDefaultAsync(m => m.detayId == id);
-
-            if (irsaliyeDetay == null) return NotFound();
-
-            return View(irsaliyeDetay);
-        }
-
-        public IActionResult Create(int? irsaliyeId)
-        {
-            ViewBag.irsaliyeId = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo",irsaliyeId);
-            ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAd");
+            ViewBag.irsaliyeId = irsaliyeId ?? 0;
             return View();
         }
 
+        // POST: irsaliyeDetays/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("detayId,irsaliyeId,malzemeId,miktar,birimFiyat,araToplam,seriNo")] irsaliyeDetay irsaliyeDetay)
+        public async Task<IActionResult> Create([Bind("irsaliyeId,malzemeId,miktar,birimFiyat,seriNo")] irsaliyeDetay detay)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(irsaliyeDetay);
-                await _context.SaveChangesAsync();
-
-                var irsaliye = await _context.irsaliyeler.FindAsync(irsaliyeDetay.irsaliyeId);
-                if (irsaliye != null)
+                if (!ModelState.IsValid)
                 {
-                    var stok = new stok
+                    Console.WriteLine("❌ ModelState geçersiz:");
+                    foreach (var state in ModelState)
                     {
-                        MalzemeId = irsaliyeDetay.malzemeId,
-                        DepoId = irsaliye.depoId,
-                        HareketTarihi = irsaliye.irsaliyeTarihi,
-                        Miktar = irsaliyeDetay.miktar,
-                        HareketTipi = irsaliye.irsaliyeTipi,
-                        ReferansId = irsaliye.irsaliyeId,
-                        Aciklama = irsaliye.aciklama,
-                        carId = irsaliye.carId,
-                        SeriNo = irsaliyeDetay.seriNo
-                    };
-
-                    _context.stoklar.Add(stok);
-                    await _context.SaveChangesAsync();
+                        foreach (var error in state.Value.Errors)
+                        {
+                            Console.WriteLine($"[ModelError] {state.Key} → {error.ErrorMessage}");
+                        }
+                    }
                 }
 
-                return RedirectToAction(nameof(Index));
-            }
-
-            ViewBag.irsaliyeId = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo", irsaliyeDetay.irsaliyeId);
-            ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAd", irsaliyeDetay.malzemeId);
-            return View(irsaliyeDetay);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var irsaliyeDetay = await _context.irsaliyeDetaylari.FindAsync(id);
-            if (irsaliyeDetay == null) return NotFound();
-
-            ViewBag.irsaliyeId = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo", irsaliyeDetay.irsaliyeId);
-            ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAd", irsaliyeDetay.malzemeId);
-            return View(irsaliyeDetay);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("detayId,irsaliyeId,malzemeId,miktar,birimFiyat,araToplam,seriNo")] irsaliyeDetay irsaliyeDetay)
-        {
-            if (id != irsaliyeDetay.detayId) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(irsaliyeDetay);
+                    detay.araToplam = detay.miktar * detay.birimFiyat;
+
+                    _context.irsaliyeDetaylari.Add(detay);
                     await _context.SaveChangesAsync();
+
+                    var irsaliye = await _context.irsaliyeler.FindAsync(detay.irsaliyeId);
+                    if (irsaliye != null)
+                    {
+                        irsaliye.toplamTutar += detay.araToplam;
+                        _context.irsaliyeler.Update(irsaliye);
+
+                        var stok = new stok
+                        {
+                            MalzemeId = detay.malzemeId,
+                            DepoId = irsaliye.depoId,
+                            HareketTarihi = irsaliye.irsaliyeTarihi,
+                            Miktar = detay.miktar,
+                            HareketTipi = irsaliye.irsaliyeTipi,
+                            ReferansId = irsaliye.irsaliyeId,
+                            Aciklama = irsaliye.aciklama,
+                            carId = irsaliye.carId,
+                            SeriNo = detay.seriNo
+                        };
+
+                        _context.stoklar.Add(stok);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    return RedirectToAction("Create", new { irsaliyeId = detay.irsaliyeId });
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!irsaliyeDetayExists(irsaliyeDetay.detayId)) return NotFound();
-                    else throw;
-                }
-                return RedirectToAction(nameof(Index));
             }
-
-            ViewBag.irsaliyeId = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo", irsaliyeDetay.irsaliyeId);
-            ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAd", irsaliyeDetay.malzemeId);
-            return View(irsaliyeDetay);
-        }
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
-
-            var irsaliyeDetay = await _context.irsaliyeDetaylari
-                .Include(i => i.irsaliye)
-                .Include(i => i.malzeme)
-                .FirstOrDefaultAsync(m => m.detayId == id);
-
-            if (irsaliyeDetay == null) return NotFound();
-
-            return View(irsaliyeDetay);
-        }
-
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var irsaliyeDetay = await _context.irsaliyeDetaylari.FindAsync(id);
-            if (irsaliyeDetay != null)
+            catch (Exception ex)
             {
-                _context.irsaliyeDetaylari.Remove(irsaliyeDetay);
-                await _context.SaveChangesAsync();
+                Console.WriteLine("🔴 Exception: " + ex.Message);
+                if (ex.InnerException != null)
+                    Console.WriteLine("🔴 Inner Exception: " + ex.InnerException.Message);
             }
 
-            return RedirectToAction(nameof(Index));
-        }
 
-        private bool irsaliyeDetayExists(int id)
-        {
-            return _context.irsaliyeDetaylari.Any(e => e.detayId == id);
+
+            return View(detay);
         }
     }
 }
