@@ -63,35 +63,16 @@ namespace DepoStok.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("irsaliyeId,irsaliyeNo,carId,irsaliyeTarihi,toplamTutar,irsaliyeTipi,aciklama,transferId,durum,depoId")] irsaliye irsaliye)
         {
-            try
-            {
-                if (ModelState.IsValid) //validasyon olmasa bile ekle
+            
+            
+                if (ModelState.IsValid) //validasyon kontrolü
                 {
                     _context.Add(irsaliye);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
-                else
-                {
-                    // ✅ ModelState hatalarını logla
-                    foreach (var state in ModelState)
-                    {
-                        foreach (var error in state.Value.Errors)
-                        {
-                            Console.WriteLine($"[ModelError] {state.Key} → {error.ErrorMessage}");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // ✅ Hata loglama
-                Console.WriteLine("🔴 Exception: " + ex.Message);
-                if (ex.InnerException != null)
-                    Console.WriteLine("🔴 Inner: " + ex.InnerException.Message);
+                
 
-                ModelState.AddModelError("", "Bir hata oluştu. Lütfen tekrar deneyin.");
-            }
 
             // ❗ ModelState geçersizse ViewBag'leri yeniden doldurman GEREKİYOR
             ViewBag.CariList = new SelectList(_context.cariler, "carId", "unvan", irsaliye.carId);

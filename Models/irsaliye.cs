@@ -45,7 +45,7 @@ namespace DepoStok.Models
         [ForeignKey(nameof(transferId))]
         public depoTransfer? depoTransfer { get; set; }
 
-        [BindNever]
+        [BindNever] 
         [ForeignKey(nameof(carId))]    
         public cari? cari { get; set; }
 
