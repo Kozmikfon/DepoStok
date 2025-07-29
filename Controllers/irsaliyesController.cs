@@ -65,12 +65,12 @@ namespace DepoStok.Controllers
         {
             
             
-                if (ModelState.IsValid) //validasyon kontrolü
-                {
-                    _context.Add(irsaliye);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
-                }
+               if (ModelState.IsValid) //validasyon kontrolü
+               {
+                  _context.Add(irsaliye);
+                  await _context.SaveChangesAsync();
+                return RedirectToAction("Create", "irsaliyeDetays", new { irsaliyeId = irsaliye.irsaliyeId });
+            }
                 
 
 

@@ -19,44 +19,33 @@ namespace DepoStok.Controllers
             _context = context;
         }
 
-        // GET: irsaliyeDetays
         public async Task<IActionResult> Index()
         {
             var stokDbContext = _context.irsaliyeDetaylari.Include(i => i.irsaliye).Include(i => i.malzeme);
             return View(await stokDbContext.ToListAsync());
         }
 
-        // GET: irsaliyeDetays/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var irsaliyeDetay = await _context.irsaliyeDetaylari
                 .Include(i => i.irsaliye)
                 .Include(i => i.malzeme)
                 .FirstOrDefaultAsync(m => m.detayId == id);
-            if (irsaliyeDetay == null)
-            {
-                return NotFound();
-            }
+
+            if (irsaliyeDetay == null) return NotFound();
 
             return View(irsaliyeDetay);
         }
 
-        // GET: irsaliyeDetays/Create
-        public IActionResult Create()
+        public IActionResult Create(int? irsaliyeId)
         {
-            ViewData["irsaliyeId"] = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo");
-            ViewData["malzemeId"] = new SelectList(_context.malzemeler, "malzemeId", "birim");
+            ViewBag.irsaliyeId = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo",irsaliyeId);
+            ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAd");
             return View();
         }
 
-        // POST: irsaliyeDetays/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("detayId,irsaliyeId,malzemeId,miktar,birimFiyat,araToplam,seriNo")] irsaliyeDetay irsaliyeDetay)
@@ -65,42 +54,52 @@ namespace DepoStok.Controllers
             {
                 _context.Add(irsaliyeDetay);
                 await _context.SaveChangesAsync();
+
+                var irsaliye = await _context.irsaliyeler.FindAsync(irsaliyeDetay.irsaliyeId);
+                if (irsaliye != null)
+                {
+                    var stok = new stok
+                    {
+                        MalzemeId = irsaliyeDetay.malzemeId,
+                        DepoId = irsaliye.depoId,
+                        HareketTarihi = irsaliye.irsaliyeTarihi,
+                        Miktar = irsaliyeDetay.miktar,
+                        HareketTipi = irsaliye.irsaliyeTipi,
+                        ReferansId = irsaliye.irsaliyeId,
+                        Aciklama = irsaliye.aciklama,
+                        carId = irsaliye.carId,
+                        SeriNo = irsaliyeDetay.seriNo
+                    };
+
+                    _context.stoklar.Add(stok);
+                    await _context.SaveChangesAsync();
+                }
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["irsaliyeId"] = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo", irsaliyeDetay.irsaliyeId);
-            ViewData["malzemeId"] = new SelectList(_context.malzemeler, "malzemeId", "birim", irsaliyeDetay.malzemeId);
+
+            ViewBag.irsaliyeId = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo", irsaliyeDetay.irsaliyeId);
+            ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAd", irsaliyeDetay.malzemeId);
             return View(irsaliyeDetay);
         }
 
-        // GET: irsaliyeDetays/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var irsaliyeDetay = await _context.irsaliyeDetaylari.FindAsync(id);
-            if (irsaliyeDetay == null)
-            {
-                return NotFound();
-            }
-            ViewData["irsaliyeId"] = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo", irsaliyeDetay.irsaliyeId);
-            ViewData["malzemeId"] = new SelectList(_context.malzemeler, "malzemeId", "birim", irsaliyeDetay.malzemeId);
+            if (irsaliyeDetay == null) return NotFound();
+
+            ViewBag.irsaliyeId = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo", irsaliyeDetay.irsaliyeId);
+            ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAd", irsaliyeDetay.malzemeId);
             return View(irsaliyeDetay);
         }
 
-        // POST: irsaliyeDetays/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("detayId,irsaliyeId,malzemeId,miktar,birimFiyat,araToplam,seriNo")] irsaliyeDetay irsaliyeDetay)
         {
-            if (id != irsaliyeDetay.detayId)
-            {
-                return NotFound();
-            }
+            if (id != irsaliyeDetay.detayId) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -111,43 +110,31 @@ namespace DepoStok.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!irsaliyeDetayExists(irsaliyeDetay.detayId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    if (!irsaliyeDetayExists(irsaliyeDetay.detayId)) return NotFound();
+                    else throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["irsaliyeId"] = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo", irsaliyeDetay.irsaliyeId);
-            ViewData["malzemeId"] = new SelectList(_context.malzemeler, "malzemeId", "birim", irsaliyeDetay.malzemeId);
+
+            ViewBag.irsaliyeId = new SelectList(_context.irsaliyeler, "irsaliyeId", "irsaliyeNo", irsaliyeDetay.irsaliyeId);
+            ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAd", irsaliyeDetay.malzemeId);
             return View(irsaliyeDetay);
         }
 
-        // GET: irsaliyeDetays/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var irsaliyeDetay = await _context.irsaliyeDetaylari
                 .Include(i => i.irsaliye)
                 .Include(i => i.malzeme)
                 .FirstOrDefaultAsync(m => m.detayId == id);
-            if (irsaliyeDetay == null)
-            {
-                return NotFound();
-            }
+
+            if (irsaliyeDetay == null) return NotFound();
 
             return View(irsaliyeDetay);
         }
 
-        // POST: irsaliyeDetays/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -156,9 +143,9 @@ namespace DepoStok.Controllers
             if (irsaliyeDetay != null)
             {
                 _context.irsaliyeDetaylari.Remove(irsaliyeDetay);
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
