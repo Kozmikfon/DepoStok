@@ -18,33 +18,36 @@
                 <input asp-for="irsaliyeNo" class="form-control" />
                 <span asp-validation-for="irsaliyeNo" class="text-danger"></span>
             </div>
-            <div class="mb-3">
-                <label asp-for="carId" class="form-label"></label>
-                <select asp-for="carId" asp-items="ViewBag.CariList" class="form-select">
-                    <option value="">Seçiniz</option>
-                </select>
+            <div class="form-group">
+                <label asp-for="carId" class="control-label">Kullanıcı Numarası (carId)</label>
+                <input asp-for="carId" class="form-control" id="carIdInput" />
                 <span asp-validation-for="carId" class="text-danger"></span>
             </div>
 
-            <div class="form-group">
-                <label asp-for="irsaliyeTarihi" class="control-label"></label>
-                <input asp-for="irsaliyeTarihi" class="form-control" />
-                <span asp-validation-for="irsaliyeTarihi" class="text-danger"></span>
+            <div id="cariBilgileri" class="alert alert-info mt-2" style="display:none;">
+                <strong>Ünvan:</strong> <span id="unvan"></span><br />
+                <strong>Telefon:</strong> <span id="telefon"></span><br />
+                <strong>Adres:</strong> <span id="adres"></span><br />
+                <strong>Vergi No:</strong> <span id="vergiNo"></span>
             </div>
+
+           
+
+            <div class="form-group">
+                <label asp-for="irsaliyeTipi" class="control-label"></label>
+                <select asp-for="irsaliyeTipi" asp-items="Html.GetEnumSelectList<DepoStok.Models.Enums.StokHareketTipi>()" class="form-control">
+                    <option value="">Tip Seçiniz</option>
+                </select>
+
+                <span asp-validation-for="irsaliyeTipi" class="text-danger"></span>
+            </div>
+
+
             <div class="form-group">
                 <label asp-for="toplamTutar" class="control-label"></label>
                 <input asp-for="toplamTutar" class="form-control" />
                 <span asp-validation-for="toplamTutar" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="irsaliyeTipi" class="control-label"></label>
-                <select asp-for="irsaliyeTipi" asp-items="Html.GetEnumSelectList<DepoStok.Models.Enums.StokHareketTipi>()" class="form-control">
-                    <option value="">Seçiniz</option>
-                </select>
-                <span asp-validation-for="irsaliyeTipi" class="text-danger"></span>
-            </div>
-
-
             <div class="form-group">
                 <label asp-for="aciklama" class="control-label"></label>
                 <input asp-for="aciklama" class="form-control" />
@@ -52,12 +55,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="transferId" class="control-label"></label>
-                <select asp-for="transferId" asp-items="ViewBag.TransferList" class="form-select">
-                    <option value="">Transfer seçilmeyecek</option>
+                <select asp-for="transferId" class="form-control" asp-items="ViewBag.TransferList">
+                    <option value="">Transfer Seçilmeyecek</option>
                 </select>
                 <span asp-validation-for="transferId" class="text-danger"></span>
             </div>
-
             <div class="form-group form-check">
                 <label class="form-check-label">
                     <input class="form-check-input" asp-for="durum" /> @Html.DisplayNameFor(model => model.durum)
@@ -65,12 +67,11 @@
             </div>
             <div class="form-group">
                 <label asp-for="depoId" class="control-label"></label>
-                <select asp-for="depoId" asp-items="ViewBag.DepoList" class="form-select">
+                <select asp-for="depoId" class="form-control" asp-items="ViewBag.DepoList">
                     <option value="">Depo Seçiniz</option>
                 </select>
                 <span asp-validation-for="depoId" class="text-danger"></span>
             </div>
-
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -84,4 +85,25 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById("carIdInput").addEventListener("change", function () {
+            const id = this.value;
+            if (!id) return;
+
+            fetch(`/caris/GetCariBilgi?id=${id}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data && data.unvan) {
+                        document.getElementById("unvan").innerText = data.unvan;
+                        document.getElementById("telefon").innerText = data.telefon;
+                        document.getElementById("adres").innerText = data.adres;
+                        document.getElementById("vergiNo").innerText = data.vergiNo;
+                        document.getElementById("cariBilgileri").style.display = "block";
+                    } else {
+                        document.getElementById("cariBilgileri").style.display = "none";
+                    }
+                });
+        });
+    </script>
+
 }

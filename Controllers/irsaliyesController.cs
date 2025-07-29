@@ -50,11 +50,9 @@ namespace DepoStok.Controllers
         // GET: irsaliyes/Create
         public IActionResult Create()
         {
-
             ViewBag.CariList = new SelectList(_context.cariler, "carId", "unvan");
             ViewBag.DepoList = new SelectList(_context.depolar, "depoId", "depoAd");
-            ViewBag.TransferList = new SelectList(_context.depoTransferleri, "transferId", "transferId");
-
+            ViewBag.TransferList = new SelectList(_context.depoTransferleri, "transferId", "transferNo"); 
             return View();
         }
 
@@ -65,20 +63,44 @@ namespace DepoStok.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("irsaliyeId,irsaliyeNo,carId,irsaliyeTarihi,toplamTutar,irsaliyeTipi,aciklama,transferId,durum,depoId")] irsaliye irsaliye)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(irsaliye);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid) //validasyon olmasa bile ekle
+                {
+                    _context.Add(irsaliye);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    // ✅ ModelState hatalarını logla
+                    foreach (var state in ModelState)
+                    {
+                        foreach (var error in state.Value.Errors)
+                        {
+                            Console.WriteLine($"[ModelError] {state.Key} → {error.ErrorMessage}");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // ✅ Hata loglama
+                Console.WriteLine("🔴 Exception: " + ex.Message);
+                if (ex.InnerException != null)
+                    Console.WriteLine("🔴 Inner: " + ex.InnerException.Message);
+
+                ModelState.AddModelError("", "Bir hata oluştu. Lütfen tekrar deneyin.");
             }
 
+            // ❗ ModelState geçersizse ViewBag'leri yeniden doldurman GEREKİYOR
             ViewBag.CariList = new SelectList(_context.cariler, "carId", "unvan", irsaliye.carId);
             ViewBag.DepoList = new SelectList(_context.depolar, "depoId", "depoAd", irsaliye.depoId);
-            ViewBag.TransferList = new SelectList(_context.depoTransferleri, "transferId", "transferId", irsaliye.transferId);
-
+            ViewBag.TransferList = new SelectList(_context.depoTransferleri, "transferId", "transferNo", irsaliye.transferId);
 
             return View(irsaliye);
         }
+
 
         // GET: irsaliyes/Edit/5
         public async Task<IActionResult> Edit(int? id)
@@ -131,9 +153,10 @@ namespace DepoStok.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["carId"] = new SelectList(_context.cariler, "carId", "adres", irsaliye.carId);
-            ViewData["depoId"] = new SelectList(_context.depolar, "depoId", "depoAd", irsaliye.depoId);
-            ViewData["transferId"] = new SelectList(_context.depoTransferleri, "transferId", "transferId", irsaliye.transferId);
+            ViewBag.CariList = new SelectList(_context.cariler, "carId", "unvan", irsaliye.carId);
+            ViewBag.DepoList = new SelectList(_context.depolar, "depoId", "depoAd", irsaliye.depoId);
+            ViewBag.TransferList = new SelectList(_context.depoTransferleri, "transferId", "transferId", irsaliye.transferId);
+
             return View(irsaliye);
         }
 

@@ -13,6 +13,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th> Cari No</th>
             <th>
                 @Html.DisplayNameFor(model => model.unvan)
             </th>
@@ -37,6 +38,8 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td> @item.carId</td>
+
             <td>
                 @Html.DisplayFor(modelItem => item.unvan)
             </td>

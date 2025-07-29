@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -20,7 +21,7 @@ namespace DepoStok.Models
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [DisplayName("İrsaliye Tarihi:")]
-        public DateTime irsaliyeTarihi { get; set; }
+        public DateTime irsaliyeTarihi { get; set; }= DateTime.Now;
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [DisplayName("toplam Tutar:")]
@@ -28,7 +29,7 @@ namespace DepoStok.Models
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [DisplayName("İrsaliye Tipi:")]
-        public string irsaliyeTipi { get; set; }
+        public Enums.StokHareketTipi irsaliyeTipi { get; set; }
 
         [DisplayName("Açıklama:")]
         public string? aciklama { get; set; }
@@ -44,8 +45,9 @@ namespace DepoStok.Models
         [ForeignKey(nameof(transferId))]
         public depoTransfer? depoTransfer { get; set; }
 
-        [ForeignKey(nameof(carId))]
-        public cari cari { get; set; }
+        [BindNever]
+        [ForeignKey(nameof(carId))]    
+        public cari? cari { get; set; }
 
         [Required]
         [DisplayName("Depo:")]

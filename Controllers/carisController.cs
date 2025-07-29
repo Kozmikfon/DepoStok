@@ -153,5 +153,27 @@ namespace DepoStok.Controllers
         {
             return _context.cariler.Any(e => e.carId == id);
         }
+
+        //carigetir
+        [HttpGet]
+        public IActionResult GetCariBilgi(int id)
+        {
+            var cari = _context.cariler
+                .Where(c => c.carId == id)
+                .Select(c => new
+                {
+                    c.unvan,
+                    c.adres,
+                    c.telefon,
+                    c.vergiNo
+                })
+                .FirstOrDefault();
+
+            if (cari == null)
+                return NotFound();
+
+            return Json(cari);
+        }
+
     }
 }
