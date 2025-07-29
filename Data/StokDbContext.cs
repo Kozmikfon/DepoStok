@@ -1,5 +1,6 @@
 ﻿using DepoStok.Models;
 using DepoStok.Models.Identity;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +21,8 @@ namespace DepoStok.Data
         public DbSet<depoTransferDetay> depoTransferDetaylari { get; set; }
         public DbSet<irsaliye> irsaliyeler { get; set; }
         public DbSet<irsaliyeDetay> irsaliyeDetaylari { get; set; }
+        public DbSet<Vw_StokDurumu> Vw_StokDurumu { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -107,6 +110,9 @@ namespace DepoStok.Data
                 .WithMany()
                 .HasForeignKey(dt=>dt.hedefDepoId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Vw_StokDurumu>()
+                .HasNoKey().ToView("Vw_StokDurumu");
 
         }
     }

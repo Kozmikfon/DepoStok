@@ -1,0 +1,27 @@
+﻿@model IEnumerable<DepoStok.Models.Vw_StokDurumu>
+
+@{
+    ViewData["Title"] = "Stok Durumu";
+}
+
+<h2>Stok Durumu</h2>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Malzeme ID</th>
+            <th>Malzeme Adı</th>
+            <th>Kalan Miktar</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.malzemeId</td>
+            <td>@item.malzemeAdi</td>
+            <td>@item.KalanMiktar</td>
+        </tr>
+    }
+    </tbody>
+</table>

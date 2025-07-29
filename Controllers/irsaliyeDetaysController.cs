@@ -85,5 +85,17 @@ namespace DepoStok.Controllers
 
             return View(detay);
         }
+
+        // GET: irsaliyeDetays
+        public async Task<IActionResult> Index()
+        {
+            var detaylar = await _context.irsaliyeDetaylari
+                .Include(d => d.irsaliye)
+                .Include(d => d.malzeme)
+                .ToListAsync();
+
+            return View(detaylar);
+        }
+
     }
 }
