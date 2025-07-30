@@ -32,7 +32,7 @@ namespace DepoStok.Data
             //enum hareket tipi
             modelBuilder.Entity<stok>()
                 .Property(s => s.HareketTipi)
-                .HasConversion<string>();
+                .HasConversion<int>();
 
             //malzeme stok ilişkisi
             modelBuilder.Entity<stok>()
