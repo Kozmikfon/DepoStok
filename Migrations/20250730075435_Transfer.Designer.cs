@@ -4,6 +4,7 @@ using DepoStok.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DepoStok.Migrations
 {
     [DbContext(typeof(StokDbContext))]
-    partial class StokDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250730075435_Transfer")]
+    partial class Transfer
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -208,6 +211,7 @@ namespace DepoStok.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("transferNo")
+                        .HasMaxLength(50)
                         .HasColumnType("int");
 
                     b.Property<DateTime>("transferTarihi")

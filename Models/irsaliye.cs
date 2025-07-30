@@ -34,16 +34,11 @@ namespace DepoStok.Models
         [DisplayName("Açıklama:")]
         public string? aciklama { get; set; }
 
-        
-        [DisplayName("Transfer Numarası:")]
-        public int? transferId { get; set; }
 
         [Required(ErrorMessage = "Bu alan boş geçilemez")]
         [DisplayName("Durum:")]
         public bool durum {  get; set; }
 
-        [ForeignKey(nameof(transferId))]
-        public depoTransfer? depoTransfer { get; set; }
 
         [BindNever] 
         [ForeignKey(nameof(carId))]    

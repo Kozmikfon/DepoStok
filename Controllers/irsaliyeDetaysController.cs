@@ -29,17 +29,7 @@ namespace DepoStok.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
-                {
-                    Console.WriteLine("❌ ModelState geçersiz:");
-                    foreach (var state in ModelState)
-                    {
-                        foreach (var error in state.Value.Errors)
-                        {
-                            Console.WriteLine($"[ModelError] {state.Key} → {error.ErrorMessage}");
-                        }
-                    }
-                }
+               
 
                 if (ModelState.IsValid)
                 {

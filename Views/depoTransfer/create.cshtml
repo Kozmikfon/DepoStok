@@ -1,0 +1,49 @@
+﻿@model DepoStok.Models.depoTransfer
+
+@{
+    ViewData["Title"] = "Yeni Depo Transferi";
+}
+
+<h2>Yeni Depo Transferi</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="transferNo" class="form-label"></label>
+        <input asp-for="transferNo" class="form-control" />
+        <span asp-validation-for="transferNo" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="transferTarihi" class="form-label"></label>
+        <input asp-for="transferTarihi" type="date" class="form-control" />
+        <span asp-validation-for="transferTarihi" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="kaynakDepoId" class="form-label"></label>
+        <select asp-for="kaynakDepoId" class="form-select" asp-items="ViewBag.kaynakDepoId">
+            <option value="">Depo seçiniz</option>
+        </select>
+        <span asp-validation-for="kaynakDepoId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="hedefDepoId" class="form-label"></label>
+        <select asp-for="hedefDepoId" class="form-select" asp-items="ViewBag.hedefDepoId">
+            <option value="">Depo seçiniz</option>
+        </select>
+        <span asp-validation-for="hedefDepoId" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="aciklama" class="form-label"></label>
+        <textarea asp-for="aciklama" class="form-control"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Oluştur</button>
+    <a asp-action="Index" class="btn btn-secondary">İptal</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

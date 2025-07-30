@@ -1,0 +1,36 @@
+﻿@model IEnumerable<DepoStok.Models.depoTransfer>
+@{
+    ViewData["Title"] = "Depo Transferleri";
+}
+
+<h2>Depo Transfer Listesi</h2>
+
+<a asp-action="Create" class="btn btn-primary mb-3">Yeni Transfer Başlat</a>
+
+<table class="table table-bordered table-striped">
+    <thead class="table-light">
+        <tr>
+            <th>Transfer No</th>
+            <th>Tarih</th>
+            <th>Kaynak Depo</th>
+            <th>Hedef Depo</th>
+            <th>Açıklama</th>
+            <th>Detay</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.transferNo</td>
+                <td>@item.transferTarihi.ToShortDateString()</td>
+                <td>@item.kaynakDepo?.depoAd</td>
+                <td>@item.hedefDepo?.depoAd</td>
+                <td>@item.aciklama</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.transferId" class="btn btn-info btn-sm">Görüntüle</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -22,7 +22,7 @@ namespace DepoStok.Controllers
         // GET: irsaliyes
         public async Task<IActionResult> Index()
         {
-            var stokDbContext = _context.irsaliyeler.Include(i => i.cari).Include(i => i.depo).Include(i => i.depoTransfer);
+            var stokDbContext = _context.irsaliyeler.Include(i => i.cari).Include(i => i.depo);
             return View(await stokDbContext.ToListAsync());
         }
 
@@ -37,7 +37,7 @@ namespace DepoStok.Controllers
             var irsaliye = await _context.irsaliyeler
                 .Include(i => i.cari)
                 .Include(i => i.depo)
-                .Include(i => i.depoTransfer)
+                
                 .FirstOrDefaultAsync(m => m.irsaliyeId == id);
             if (irsaliye == null)
             {
@@ -77,7 +77,7 @@ namespace DepoStok.Controllers
             // ❗ ModelState geçersizse ViewBag'leri yeniden doldurman GEREKİYOR
             ViewBag.CariList = new SelectList(_context.cariler, "carId", "unvan", irsaliye.carId);
             ViewBag.DepoList = new SelectList(_context.depolar, "depoId", "depoAd", irsaliye.depoId);
-            ViewBag.TransferList = new SelectList(_context.depoTransferleri, "transferId", "transferNo", irsaliye.transferId);
+            
 
             return View(irsaliye);
         }
@@ -98,7 +98,7 @@ namespace DepoStok.Controllers
             }
             ViewData["carId"] = new SelectList(_context.cariler, "carId", "adres", irsaliye.carId);
             ViewData["depoId"] = new SelectList(_context.depolar, "depoId", "depoAd", irsaliye.depoId);
-            ViewData["transferId"] = new SelectList(_context.depoTransferleri, "transferId", "transferId", irsaliye.transferId);
+            
             return View(irsaliye);
         }
 
@@ -136,7 +136,7 @@ namespace DepoStok.Controllers
             }
             ViewBag.CariList = new SelectList(_context.cariler, "carId", "unvan", irsaliye.carId);
             ViewBag.DepoList = new SelectList(_context.depolar, "depoId", "depoAd", irsaliye.depoId);
-            ViewBag.TransferList = new SelectList(_context.depoTransferleri, "transferId", "transferId", irsaliye.transferId);
+            
 
             return View(irsaliye);
         }
@@ -152,7 +152,7 @@ namespace DepoStok.Controllers
             var irsaliye = await _context.irsaliyeler
                 .Include(i => i.cari)
                 .Include(i => i.depo)
-                .Include(i => i.depoTransfer)
+                
                 .FirstOrDefaultAsync(m => m.irsaliyeId == id);
             if (irsaliye == null)
             {
