@@ -1,33 +1,42 @@
-﻿@model DepoStok.Models.depoTransferDetay
+﻿@model DepoStok.Models.depoTransfer
 @{
-    ViewData["Title"] = "Malzeme Ekle";
+    ViewData["Title"] = "Transfer Detayları";
 }
 
-<h2>Malzeme Transfer Detayı Ekle</h2>
+<h2>Transfer No: @Model.transferNo</h2>
 
-<form asp-action="Create" method="post">
-    <input type="hidden" asp-for="transferId" />
+<div class="mb-3">
+    <strong>Tarih:</strong> @Model.transferTarihi.ToShortDateString() <br />
+    <strong>Kaynak Depo:</strong> @Model.kaynakDepo?.depoAd <br />
+    <strong>Hedef Depo:</strong> @Model.hedefDepo?.depoAd <br />
+    <strong>Açıklama:</strong> @Model.aciklama
+</div>
 
-    <div class="mb-3">
-        <label asp-for="malzemeId" class="form-label"></label>
-        <select asp-for="malzemeId" class="form-select" asp-items="ViewBag.malzemeId">
-            <option value="">Malzeme Seçiniz</option>
-        </select>
-        <span asp-validation-for="malzemeId" class="text-danger"></span>
-    </div>
+<a asp-controller="depoTransferDetay" asp-action="Create" asp-route-transferId="@Model.transferId" class="btn btn-success mb-3">
+    + Malzeme Ekle
+</a>
 
-    <div class="mb-3">
-        <label asp-for="miktar" class="form-label"></label>
-        <input asp-for="miktar" class="form-control" />
-        <span asp-validation-for="miktar" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-success">Kaydet</button>
-    <a asp-controller="DepoTransfer" asp-action="Details" asp-route-id="@Model.transferId" class="btn btn-secondary">İptal</a>
-</form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+@if (Model.depoTransferDetaylari.Any())
+{
+    <table class="table table-striped">
+        <thead class="table-light">
+            <tr>
+                <th>Malzeme</th>
+                <th>Miktar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var detay in Model.depoTransferDetaylari)
+            {
+                <tr>
+                    <td>@detay.malzeme?.malzemeAdi</td>
+                    <td>@detay.miktar</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">Bu transfere henüz malzeme eklenmemiş.</p>
 }

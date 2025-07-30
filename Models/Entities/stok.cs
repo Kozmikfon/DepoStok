@@ -36,16 +36,16 @@ namespace DepoStok.Models
         public StokHareketTipi HareketTipi { get; set; }
 
         [DisplayName("Evrak Numarası:")]
-        public int? ReferansId { get; set; } // int tanımlanacak irsaliyeye ait bilgiler bu ıd ile stokda tutulacak
+        public int? ReferansId { get; set; } 
 
         [DisplayName("Açıklama:")]
         public string? Aciklama { get; set; }
 
-        [Required(ErrorMessage = "Cari seçimi zorunludur.")]
-        public int carId { get; set; } // cari ilişkisi için
+        
+        public int? carId { get; set; } 
 
         [ForeignKey(nameof(carId))]
-        public cari? cari { get; set; } // opsiyonel navigation
+        public cari? cari { get; set; }
 
 
         [DisplayName("Seri Numarası:")]

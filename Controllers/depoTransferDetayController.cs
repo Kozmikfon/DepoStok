@@ -19,10 +19,15 @@ namespace DepoStok.Controllers
         // GET: DepoTransferDetay/Create
         public IActionResult Create(int transferId)
         {
-            ViewBag.transferId = transferId;
+            var model = new depoTransferDetay
+            {
+                transferId = transferId
+            };
+
             ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi");
-            return View();
+            return View(model); // ✅ Model gönderildi
         }
+
 
         // POST: DepoTransferDetay/Create
         [HttpPost]
@@ -50,7 +55,8 @@ namespace DepoStok.Controllers
                         HareketTipi = StokHareketTipi.TransferCikis,
                         HareketTarihi = now,
                         ReferansId = detay.detayId,
-                        Aciklama = $"Transfer çıkışı (Transfer No: {transfer.transferNo})"
+                        Aciklama = $"Transfer çıkışı (Transfer No: {transfer.transferNo})",
+                        carId=null,
                     };
 
                     // 4. Hedef depoya GİRİŞ
@@ -62,7 +68,8 @@ namespace DepoStok.Controllers
                         HareketTipi = StokHareketTipi.TransferGiris,
                         HareketTarihi = now,
                         ReferansId = detay.detayId,
-                        Aciklama = $"Transfer girişi (Transfer No: {transfer.transferNo})"
+                        Aciklama = $"Transfer girişi (Transfer No: {transfer.transferNo})",
+                        carId=null,
                     };
 
                     _context.stoklar.AddRange(cikis, giris);

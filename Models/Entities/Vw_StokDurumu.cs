@@ -1,4 +1,4 @@
-﻿namespace DepoStok.Models
+﻿namespace DepoStok.Models.Entities
 {
     public class Vw_StokDurumu
     {

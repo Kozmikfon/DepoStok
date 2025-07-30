@@ -1,0 +1,34 @@
+﻿@model List<DepoStok.Models.stok>
+@{
+    ViewData["Title"] = "Stok Hareket Listesi";
+}
+
+<h2>Stok Hareket Listesi</h2>
+
+<table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Malzeme</th>
+            <th>Depo</th>
+            <th>Hareket Tipi</th>
+            <th>Tarih</th>
+            <th>Miktar</th>
+            <th>Açıklama</th>
+            <th>Seri No</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Malzeme?.malzemeAdi</td>
+                <td>@item.Depo?.depoAd</td>
+                <td>@item.HareketTipi</td>
+                <td>@item.HareketTarihi.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@item.Miktar</td>
+                <td>@item.Aciklama</td>
+                <td>@item.SeriNo</td>
+            </tr>
+        }
+    </tbody>
+</table>
