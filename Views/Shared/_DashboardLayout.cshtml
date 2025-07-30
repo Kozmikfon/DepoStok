@@ -17,10 +17,14 @@
     <link href="/Demo/css/styles.css" rel="stylesheet" />
 </head>
 <body>
+
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
+            @* <button class="btn btn-outline-light me-2" id="sidebarToggle">☰</button> *@
             <a class="navbar-brand" asp-controller="Home" asp-action="Index">Depo Stok</a>
+            
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
                     aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -29,7 +33,7 @@
             <div class="collapse navbar-collapse" id="navbarNavDropdown">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" asp-controller="stoks" asp-action="Index">Stoklar</a>
+                        <a class="nav-link" asp-controller="stok" asp-action="Index">Stoklar</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="depoes" asp-action="Index">Depolar</a>
@@ -39,6 +43,12 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " asp-controller="stokDurumu" asp-action="Index">Stok Durumu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " asp-controller="irsaliyes" asp-action="Index">İrsaliye Oluştur</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link " asp-controller="depoTransfer" asp-action="Index">Depo Transfer</a>
                     </li>
 
                 </ul>

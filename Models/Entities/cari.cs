@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace DepoStok.Models
+namespace DepoStok.Models.Entities
 {
     public class cari
     {

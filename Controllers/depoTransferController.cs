@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using DepoStok.Data;
-using DepoStok.Models;
+using DepoStok.Models.Entities;
 
 namespace DepoStok.Controllers
 {

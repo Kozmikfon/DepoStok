@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using DepoStok.Data;
 using DepoStok.Models;
 using DepoStok.Models.Enums;
+using DepoStok.Models.Entities;
 
 namespace DepoStok.Controllers
 {

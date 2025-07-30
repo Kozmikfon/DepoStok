@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DepoStok.Models
+namespace DepoStok.Models.Entities
 {
     
     public class depoTransfer

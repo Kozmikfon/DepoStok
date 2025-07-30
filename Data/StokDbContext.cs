@@ -1,4 +1,4 @@
-﻿using DepoStok.Models;
+﻿using DepoStok.Models.Entities;
 using DepoStok.Models.Identity;
 
 using Microsoft.AspNetCore.Identity;
