@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using DepoStok.Data;
+﻿using DepoStok.Data;
+using DepoStok.Migrations;
 using DepoStok.Models;
 using DepoStok.Models.Entities;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace DepoStok.Controllers
 {
@@ -30,37 +31,52 @@ namespace DepoStok.Controllers
         {
             try
             {
-               
-
                 if (ModelState.IsValid)
                 {
+                    var irsaliye = await _context.irsaliyeler.FindAsync(detay.irsaliyeId);
+                    if (irsaliye == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // ❗ Stok çıkışıysa: yeterli stok var mı kontrol et
+                    if (irsaliye.irsaliyeTipi == Models.Enums.StokHareketTipi.Cikis)
+                    {
+                        var mevcutStok = await _context.Vw_StokDurumu
+                            .FirstOrDefaultAsync(v => v.depoId == irsaliye.depoId && v.malzemeId == detay.malzemeId);
+
+                        if (mevcutStok == null || mevcutStok.KalanMiktar < detay.miktar)
+                        {
+                            TempData["stokUyarisi"] = $"UYARI: Kaynak depoda yeterli stok yok. Mevcut: {mevcutStok?.KalanMiktar ?? 0}";
+                            ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi", detay.malzemeId);
+                            return View(detay);
+                        }
+                    }
+
+                    // Devam: kayıtlar
                     detay.araToplam = detay.miktar * detay.birimFiyat;
 
                     _context.irsaliyeDetaylari.Add(detay);
                     await _context.SaveChangesAsync();
 
-                    var irsaliye = await _context.irsaliyeler.FindAsync(detay.irsaliyeId);
-                    if (irsaliye != null)
+                    irsaliye.toplamTutar += detay.araToplam;
+                    _context.irsaliyeler.Update(irsaliye);
+
+                    var stok = new stok
                     {
-                        irsaliye.toplamTutar += detay.araToplam;
-                        _context.irsaliyeler.Update(irsaliye);
+                        MalzemeId = detay.malzemeId,
+                        DepoId = irsaliye.depoId,
+                        HareketTarihi = irsaliye.irsaliyeTarihi,
+                        Miktar = detay.miktar,
+                        HareketTipi = irsaliye.irsaliyeTipi,
+                        ReferansId = irsaliye.irsaliyeId,
+                        Aciklama = irsaliye.aciklama,
+                        carId = irsaliye.carId,
+                        SeriNo = detay.seriNo
+                    };
 
-                        var stok = new stok
-                        {
-                            MalzemeId = detay.malzemeId,
-                            DepoId = irsaliye.depoId,
-                            HareketTarihi = irsaliye.irsaliyeTarihi,
-                            Miktar = detay.miktar,
-                            HareketTipi = irsaliye.irsaliyeTipi,
-                            ReferansId = irsaliye.irsaliyeId,
-                            Aciklama = irsaliye.aciklama,
-                            carId = irsaliye.carId,
-                            SeriNo = detay.seriNo
-                        };
-
-                        _context.stoklar.Add(stok);
-                        await _context.SaveChangesAsync();
-                    }
+                    _context.stoklar.Add(stok);
+                    await _context.SaveChangesAsync();
 
                     return RedirectToAction("Create", new { irsaliyeId = detay.irsaliyeId });
                 }
@@ -72,10 +88,9 @@ namespace DepoStok.Controllers
                     Console.WriteLine("🔴 Inner Exception: " + ex.InnerException.Message);
             }
 
-
-
             return View(detay);
         }
+
 
         // GET: irsaliyeDetays
         public async Task<IActionResult> Index()

@@ -16,6 +16,17 @@
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="/Demo/css/styles.css" rel="stylesheet" />
 </head>
+<div aria-live="polite" aria-atomic="true" class="position-fixed bottom-0 end-0 p-3" style="z-index: 9999">
+    <div class="toast align-items-center text-white bg-danger border-0" role="alert" id="stokToast" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body" id="stokToastBody">
+                <!-- Mesaj buraya yazılacak -->
+            </div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
 <body>
 
     <!-- Navigation-->
@@ -303,6 +314,21 @@
     <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
     <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const toastBody = document.getElementById("stokToastBody");
+            const toast = new bootstrap.Toast(document.getElementById("stokToast"));
+
+            @if (TempData["stokUyarisi"] != null)
+            {
+                    <text>
+                        toastBody.innerText = "@TempData["stokUyarisi"]";
+                        toast.show();
+                    </text>
+            }
+        });
+    </script>
+
     @await RenderSectionAsync("Scripts",required:false)
 
 </body>

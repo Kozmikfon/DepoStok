@@ -37,52 +37,66 @@ namespace DepoStok.Controllers
         {
             if (ModelState.IsValid)
             {
-                // 1. Detay kaydını oluştur
+                // 1. Transfer bilgilerini al
+                var transfer = await _context.depoTransferleri.FindAsync(detay.transferId);
+                if (transfer == null)
+                {
+                    return NotFound();
+                }
+
+                // 2. Mevcut stok kontrolü (kaynak depo)
+                var mevcutStok = await _context.Vw_StokDurumu
+                    .FirstOrDefaultAsync(v => v.depoId == transfer.kaynakDepoId && v.malzemeId == detay.malzemeId);
+
+                if (mevcutStok == null || mevcutStok.KalanMiktar < detay.miktar)
+                {
+                    TempData["stokUyarisi"] = $"UYARI: Kaynak depoda yeterli stok yok. Mevcut: {mevcutStok?.KalanMiktar ?? 0}";
+                    ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi", detay.malzemeId);
+                    return View(detay);
+                }
+
+                // 3. Detay kaydını oluştur
                 _context.depoTransferDetaylari.Add(detay);
                 await _context.SaveChangesAsync(); // detayId oluşur
 
-                // 2. Transfer bilgilerini al
-                var transfer = await _context.depoTransferleri.FindAsync(detay.transferId);
-                if (transfer != null)
+                var now = DateTime.Now;
+
+                // 4. Kaynak depodan ÇIKIŞ
+                var cikis = new stok
                 {
-                    var now = DateTime.Now;
+                    MalzemeId = detay.malzemeId,
+                    DepoId = transfer.kaynakDepoId,
+                    Miktar = detay.miktar,
+                    HareketTipi = StokHareketTipi.TransferCikis,
+                    HareketTarihi = now,
+                    ReferansId = detay.detayId,
+                    Aciklama = $"Transfer çıkışı (Transfer No: {transfer.transferNo})",
+                    carId = null
+                };
 
-                    // 3. Kaynak depodan ÇIKIŞ
-                    var cikis = new stok
-                    {
-                        MalzemeId = detay.malzemeId,
-                        DepoId = transfer.kaynakDepoId,
-                        Miktar = detay.miktar,
-                        HareketTipi = StokHareketTipi.TransferCikis,
-                        HareketTarihi = now,
-                        ReferansId = detay.detayId,
-                        Aciklama = $"Transfer çıkışı (Transfer No: {transfer.transferNo})",
-                        carId=null,
-                    };
+                // 5. Hedef depoya GİRİŞ
+                var giris = new stok
+                {
+                    MalzemeId = detay.malzemeId,
+                    DepoId = transfer.hedefDepoId,
+                    Miktar = detay.miktar,
+                    HareketTipi = StokHareketTipi.TransferGiris,
+                    HareketTarihi = now,
+                    ReferansId = detay.detayId,
+                    Aciklama = $"Transfer girişi (Transfer No: {transfer.transferNo})",
+                    carId = null
+                };
 
-                    // 4. Hedef depoya GİRİŞ
-                    var giris = new stok
-                    {
-                        MalzemeId = detay.malzemeId,
-                        DepoId = transfer.hedefDepoId,
-                        Miktar = detay.miktar,
-                        HareketTipi = StokHareketTipi.TransferGiris,
-                        HareketTarihi = now,
-                        ReferansId = detay.detayId,
-                        Aciklama = $"Transfer girişi (Transfer No: {transfer.transferNo})",
-                        carId=null,
-                    };
+                _context.stoklar.AddRange(cikis, giris);
+                await _context.SaveChangesAsync();
 
-                    _context.stoklar.AddRange(cikis, giris);
-                    await _context.SaveChangesAsync();
-                }
-
-                return RedirectToAction("details", "depoTransfer", new { id = detay.transferId });
+                return RedirectToAction("Details", "depoTransfer", new { id = detay.transferId });
             }
 
             ViewBag.transferId = detay.transferId;
             ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi", detay.malzemeId);
             return View(detay);
         }
+
     }
 }

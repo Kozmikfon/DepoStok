@@ -1,29 +1,27 @@
-﻿@using DepoStok.Models.Entities
-@model IEnumerable<Vw_StokDurumu>
+﻿@model List<DepoStok.Models.Entities.Vw_StokDurumu>
 
 @{
     ViewData["Title"] = "Stok Durumu";
-
 }
 
 <h2>Stok Durumu</h2>
 
-<table class="table table-bordered">
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>Malzeme ID</th>
+            <th>Depo Adı</th>
             <th>Malzeme Adı</th>
             <th>Kalan Miktar</th>
         </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>@item.malzemeId</td>
-            <td>@item.malzemeAdi</td>
-            <td>@item.KalanMiktar</td>
-        </tr>
-    }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.depoAd</td>
+                <td>@item.malzemeAdi</td>
+                <td>@item.KalanMiktar</td>
+            </tr>
+        }
     </tbody>
 </table>
