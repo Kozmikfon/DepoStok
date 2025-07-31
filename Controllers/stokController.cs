@@ -1,12 +1,14 @@
 ﻿using DepoStok.Data;
 using DepoStok.Models.Enums;
 using DepoStok.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace DepoStok.Controllers
 {
+    [Authorize(Roles = "admin,kullanici")]
     public class stokController : Controller
     {
         private readonly StokDbContext _context;

@@ -36,28 +36,34 @@ public static class SeedData
     }
 
     private static async Task CreateUserIfNotExists(
-        UserManager<AppUser> userManager,
-        string email,
-        string adSoyad,
-        string password,
-        string role)
+     UserManager<AppUser> userManager,
+     string email,
+     string adSoyad,
+     string password,
+     string role)
     {
         var user = await userManager.FindByEmailAsync(email);
-        if (user != null)
-            return;
 
-        user = new AppUser
+        if (user == null)
         {
-            UserName = email,
-            Email = email,
-            AdSoyad = adSoyad,
-            EmailConfirmed = true
-        };
+            user = new AppUser
+            {
+                UserName = email,
+                Email = email,
+                AdSoyad = adSoyad,
+                EmailConfirmed = true
+            };
 
-        var result = await userManager.CreateAsync(user, password);
-        if (!result.Succeeded)
-            throw new Exception($"{email} kullanıcısı oluşturulamadı: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+            var result = await userManager.CreateAsync(user, password);
+            if (!result.Succeeded)
+                throw new Exception($"{email} kullanıcısı oluşturulamadı: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        }
 
-        await userManager.AddToRoleAsync(user, role);
+        // ❗ Kullanıcı varsa bile rolü eksik olabilir, kontrol edelim:
+        if (!await userManager.IsInRoleAsync(user, role))
+        {
+            await userManager.AddToRoleAsync(user, role);
+        }
     }
+
 }
