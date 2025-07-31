@@ -19,7 +19,7 @@ namespace DepoStok.Controllers
             _context = context;
         }
 
-        // GET: depoes
+        // GET: depoesf
         public async Task<IActionResult> Index()
         {
             return View(await _context.depolar.ToListAsync());
