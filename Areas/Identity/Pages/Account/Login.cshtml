@@ -5,6 +5,10 @@
 }
 
 <h2 class="mb-4">Giriş Yap</h2>
+@if (TempData["LoginUyarisi"] != null)
+{
+    <div class="alert alert-warning">@TempData["LoginUyarisi"]</div>
+}
 
 <form method="post">
     <div class="form-group">

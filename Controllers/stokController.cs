@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DepoStok.Controllers
 {
-    [Authorize(Roles = "admin,kullanici")]
+   // [Authorize(Roles = "admin,kullanici")]
     public class stokController : Controller
     {
         private readonly StokDbContext _context;
@@ -20,6 +20,13 @@ namespace DepoStok.Controllers
 
         public async Task<IActionResult> Index(StokHareketFiltreViewModel filtre)
         {
+            if (!User.Identity?.IsAuthenticated ?? true)
+            {
+                TempData["LoginUyarisi"] = "Lütfen giriş yapınız.";
+                return Redirect("/Identity/Account/Login");
+
+            }
+
             // Tüm stokları sorguya al
             var query = _context.stoklar
                 .Include(s => s.Depo)
