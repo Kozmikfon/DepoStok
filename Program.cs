@@ -83,8 +83,8 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication();
-app.UseAuthorization();
+app.UseAuthentication();//kimlik dorğulama
+app.UseAuthorization();//yetki kontrolü
 
 app.MapRazorPages();
 

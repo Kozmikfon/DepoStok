@@ -1,0 +1,52 @@
+﻿@model DepoStok.Models.ViewModel.KullaniciEkleViewModel
+@{
+    ViewData["Title"] = "Kullanıcı Ekle";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Kullanıcı Ekle</h2>
+
+@if (TempData["basari"] != null)
+{
+    <div class="alert alert-success">@TempData["basari"]</div>
+}
+
+<form asp-action="KullaniciEkle" method="post" class="mt-3">
+    <div class="mb-3">
+        <label asp-for="Email" class="form-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="AdSoyad" class="form-label"></label>
+        <input asp-for="AdSoyad" class="form-control" />
+        <span asp-validation-for="AdSoyad" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Sifre" class="form-label"></label>
+        <input asp-for="Sifre" class="form-control" />
+        <span asp-validation-for="Sifre" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Rol" class="form-label">Rol</label>
+        <select asp-for="Rol" class="form-select">
+            <option value="">Rol Seçiniz</option>
+            @foreach (var r in ViewBag.Roller as List<string>)
+            {
+                <option value="@r">@r</option>
+            }
+        </select>
+        <span asp-validation-for="Rol" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Kullanıcı Oluştur</button>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
