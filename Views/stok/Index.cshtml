@@ -1,36 +1,105 @@
-﻿@using DepoStok.Models.Entities
-@model List<stok>
+﻿@model DepoStok.Models.ViewModel.StokHareketFiltreViewModel
 @{
-    ViewData["Title"] = "Stok Hareket Listesi";
-
+    ViewData["Title"] = "Stok Hareketleri";
 }
 
-<h2>Stok Hareket Listesi</h2>
+<h2 class="mb-4">Stok Hareketleri</h2>
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>Malzeme</th>
-            <th>Depo</th>
-            <th>Hareket Tipi</th>
-            <th>Tarih</th>
-            <th>Miktar</th>
-            <th>Açıklama</th>
-            <th>Seri No</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+<!-- FILTRE FORMU -->
+<form method="get" class="row g-3 mb-4">
+    <div class="col-md-2">
+        <label class="form-label">Başlangıç</label>
+        <input type="date" name="BaslangicTarihi" value="@Model.BaslangicTarihi?.ToString("yyyy-MM-dd")" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Bitiş</label>
+        <input type="date" name="BitisTarihi" value="@Model.BitisTarihi?.ToString("yyyy-MM-dd")" class="form-control" />
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Depo</label>
+        <select name="DepoId" class="form-select">
+            <option value="">Tümü</option>
+            @foreach (var d in Model.Depolar!)
+            {
+                <option value="@d.Value" selected="@(Model.DepoId.HasValue && Model.DepoId.ToString() == d.Value ? "selected" : null)">
+                    @d.Text
+                </option>
+            }
+        </select>
+
+
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Malzeme</label>
+        <select name="MalzemeId" class="form-select">
+            <option value="">Tümü</option>
+            @foreach (var m in Model.Malzemeler!)
+            {
+                <option value="@m.Value" selected="@(Model.MalzemeId.HasValue && Model.MalzemeId.ToString() == m.Value ? "selected" : null)">
+                    @m.Text
+                </option>
+            }
+        </select>
+
+
+
+        </select>
+    </div>
+    <div class="col-md-2">
+        <label class="form-label">Hareket Tipi</label>
+        <select name="HareketTipi" class="form-select">
+            <option value="">Tümü</option>
+            @foreach (var h in Model.HareketTipleri!)
+            {
+                <option value="@h.Value" selected="@(Model.HareketTipi == h.Value ? "selected" : null)">
+                    @h.Text
+                </option>
+            }
+        </select>
+
+
+    </div>
+    <div class="col-md-2 d-flex align-items-end">
+        <button type="submit" class="btn btn-primary w-100">Filtrele</button>
+    </div>
+</form>
+
+<!-- HAREKET TABLOSU -->
+@if (Model.Hareketler.Any())
+{
+    <table class="table table-bordered table-striped table-hover">
+        <thead class="table-dark">
             <tr>
-                <td>@item.Malzeme?.malzemeAdi</td>
-                <td>@item.Depo?.depoAd</td>
-                <td>@item.HareketTipi</td>
-                <td>@item.HareketTarihi.ToString("yyyy-MM-dd HH:mm")</td>
-                <td>@item.Miktar</td>
-                <td>@item.Aciklama</td>
-                <td>@item.SeriNo</td>
+                <th>Tarih</th>
+                <th>Depo</th>
+                <th>Malzeme</th>
+                <th>Miktar</th>
+                <th>Tip</th>
+                <th>Açıklama</th>
+                <th>Cari</th>
+                <th>Referans</th>
+                <th>Seri No</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Hareketler)
+            {
+                <tr>
+                    <td>@item.HareketTarihi.ToString("dd.MM.yyyy")</td>
+                    <td>@item.DepoAd</td>
+                    <td>@item.MalzemeAdi</td>
+                    <td>@item.Miktar</td>
+                    <td>@item.HareketTipi</td>
+                    <td>@item.Aciklama</td>
+                    <td>@item.CariUnvan</td>
+                    <td>@item.ReferansId</td>
+                    <td>@item.SeriNo</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-info">Kayıt bulunamadı.</div>
+}

@@ -50,7 +50,8 @@ namespace DepoStok.Controllers
 
                 if (mevcutStok == null || mevcutStok.KalanMiktar < detay.miktar)
                 {
-                    TempData["stokUyarisi"] = $"UYARI: Kaynak depoda yeterli stok yok. Mevcut: {mevcutStok?.KalanMiktar ?? 0}";
+                    TempData["stokUyarisi"] = $"UYARI: '{detay.miktar}' adet transfer edilemez. Kaynak depodaki mevcut stok: {mevcutStok?.KalanMiktar ?? 0} adet."
+;
                     ViewBag.malzemeId = new SelectList(_context.malzemeler, "malzemeId", "malzemeAdi", detay.malzemeId);
                     return View(detay);
                 }
